@@ -3,58 +3,50 @@
 #include <fstream>
 #include <string>
 #include <Windows.h>
-#include <vector>
 #include <conio.h>
 
 using namespace std;
 
-const int BUFFER = 256;
-
-void insert(char replaceString[BUFFER], vector<int> labelPosition, string &mainString) 
+void LineCreation(string &text,const string replaceString) 
 {
-	int k = 0;
-	int size = labelPosition.size();
-	while (k < size) 
-	{
-		int index = labelPosition.back();
-		mainString.insert(index, replaceString);
-		vector<int>::iterator iter = labelPosition.end() - 1;
-		iter = labelPosition.erase(iter);
-		k++;
-	}
+	text += replaceString;
 }
-void workingWithFiles(string nameInputFile, char findString[BUFFER], char replaceString[BUFFER], string nameOutputFile) 
+
+string SearchSubstring(string &currentLine, const string findString, const string replaceString) {
+	string bufStr;
+	for (int k = 0; k < currentLine.length() - findString.length(); k++)
+	{
+		string substring = currentLine.substr(k, findString.length());
+		if (substring == findString) 
+		{
+			LineCreation(bufStr, replaceString);
+		}
+		else
+		{
+			LineCreation(bufStr, currentLine.substr(k, 1));
+		}
+	}
+	return bufStr;
+}
+
+bool ProgramExecution(const string inputFileName,const string findString,const string replaceString,const string outputFileName) 
 {
-	ifstream inputFile(nameInputFile);
-	ofstream outputFile(nameOutputFile);
+	ifstream inputFile(inputFileName);
+	ofstream outputFile(outputFileName);
 	if (inputFile)
 	{
 		while (!inputFile.eof()) 
 		{
-			char currentLine[BUFFER];
-			vector<int> labelPosition;
-			inputFile.getline(currentLine, BUFFER);
-			cout << currentLine << endl;
-			string sss = string(currentLine);
-			string bufStr = string(findString);
-			if (sss.length() >= bufStr.length()) 
+			string currentLine;
+			string bufStr;
+			getline(inputFile, currentLine);
+			bufStr = string(findString);
+			if (currentLine.length() >= bufStr.length())
 			{
-				int k = 0;
-				while (k != -1)
-				{
-					k = sss.find(findString);
-					if (k != -1) 
-					{
-						labelPosition.push_back(k);
-						sss.erase(k, bufStr.length());
-					}
-				}
-				if (labelPosition.size() > 0) 
-				{
-					insert(replaceString, labelPosition, sss);
-				}
+				bufStr = SearchSubstring(currentLine, findString, replaceString);
 			}
-			outputFile.write(sss.c_str(), sss.length());
+			
+			outputFile.write(bufStr.c_str(), bufStr.length());
 			outputFile.write("\n", 1);
 		}
 	}
@@ -62,35 +54,58 @@ void workingWithFiles(string nameInputFile, char findString[BUFFER], char replac
 	{
 		printf("Ошибка открытия входного файла.\n");
 		_getch();
-		exit(1);
+		return false;
 	}
-	inputFile.close();
-	outputFile.close();
 }
 
-void inputValidation(int argc)
+bool InputValidation(int argc)
 {
 	if (argc <= 4)
 	{
 		printf("Ошибка! Не хватает аргументов для работы программы.\n");
 		_getch();
-		exit(0);
+		return false;
 	}
 
 	else if (argc > 5)
 	{
 		printf("Ошибка! Слишком много аргументов для работы программы.\n");
 		_getch();
-		exit(1);
+		return false;
 	}
+	else if (argc == 5)
+	{
+		return true;
+	}
+}
+
+void CompletionChecks(bool ifCarriedOut)
+{
+	if (ifCarriedOut)
+	{
+		cout << "Выполнение завершено. Программа выполнена успешно." << endl;
+	}
+	else
+	{
+		cout << "Программа не выполнена." << endl;;
+	}
+	_getch();
 }
 
 int main(int argc, char *argv[])
 {
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
-	inputValidation(argc);
-	workingWithFiles(argv[1], argv[3], argv[4], argv[2]);
+	bool ifCanWork = InputValidation(argc);
+	string inputFileName = argv[1];
+	string outputFileName = argv[2];
+	string findString = argv[3];
+	string replaceString = argv[4];
+	if (ifCanWork) 
+	{
+		bool ifCarriedOut = ProgramExecution(inputFileName, findString, replaceString, outputFileName);
+		CompletionChecks(ifCarriedOut);
+	}
 	return 0;
 }	
 
