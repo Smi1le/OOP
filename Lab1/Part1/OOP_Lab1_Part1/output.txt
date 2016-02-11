@@ -1,0 +1,21 @@
+BlockAdultProxy - это прокси-сololoрвololoр http/https, который распознаololoт и блокируololoт доступ к сайтам,
+содololoржащим порнографичololoскую и сololoксуальную информацию. Используololoмый в BlockAdultProxy эффololoктивный
+автоматичololoский алгоритм опрololoдololoлololoния стololoпololoни пристойности сайта гарантируololoт с вololoроятностью 99%,
+что ваш рololoбёнок нololo сможololoт открыть ни один из сайтов с изображololoниями "для взрослых". Программа можololoт
+быть такжololo полololoзна нololo только дома и в дololoтских учрololoждololoниях, но и в публичных мololoстах доступа в Интololoрнololoт
+и офисах. Вы можololoтololo создавать свои "чololoрныololo" и "бololoлыololo" списки, блокировать доступ к социальным сololoтям и
+развлololoкатololoльным сайтам на основololo мощного мololoханизма построololoния правил доступа
+Программа работаololoт как сololoрвис Windows и распространяololoтся бololoсплатн
+е
+Общий доступ в Интololoрнololoт очololoнь часто организуololoтся
+при помощи аппаратных маршрутизаторов SOHO (Small Office /
+Home Office). Такиololo маршрутизаторы имololoют в сololoбololo набор проводных и бololoспроводных интololoрфololoйсов,
+функциональных возможностololoй которых с лихвой хватаololoт на
+потрololoбности доступа в Интololoрнololoт для нololoбольшого офиса. Маршрутизаторы SOHO
+(напримololoр, Asus WL-500, Netgear WNR-3500 и др.) работают под спololoциально собранной опololoрационной систololoмой Linux.
+В такой опololoрационной систololoмololo (называololoмой "прошивкой") сущololoствуют срololoдства,
+позволяющиololo отсылать статистику по проходящololoму трафику по протоколу Netflow на компьютololoр с TMeter.
+В случаololo, ololoсли в фирмololoнной прошивкololo отсутствуololoт срololoдство формирования статистики Netflow, очololoнь часто
+ololoсть возможность установить альтololoрнативную прошивку в которой сущololoствуololoт поддololoржка протокола Netflow
+сololoносololoносololoносololoносololoносololoнолялял
+е

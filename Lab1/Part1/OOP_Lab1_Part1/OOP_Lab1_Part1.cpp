@@ -7,9 +7,9 @@
 
 using namespace std;
 
-void LineCreation(string &text,const string replaceString) 
+void LineCreation(string &text,const string addedLine) 
 {
-	text += replaceString;
+	text += addedLine;
 }
 
 string SearchSubstring(string &currentLine, const string findString, const string replaceString) {
