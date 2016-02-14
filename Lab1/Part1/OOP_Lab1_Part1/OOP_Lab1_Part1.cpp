@@ -7,29 +7,27 @@
 
 using namespace std;
 
-void LineCreation(string &text,const string addedLine) 
-{
-	text += addedLine;
-}
-
-string SearchSubstring(string &currentLine, const string findString, const string replaceString) {
+string SearchAndReplaceSubstring(string &readLine, const string &findString, const string &replaceString) {
 	string bufStr;
-	for (int k = 0; k < currentLine.length() - findString.length(); k++)
+	int indexSubstringOccurrences = 0;
+	while (indexSubstringOccurrences != -1)
 	{
-		string substring = currentLine.substr(k, findString.length());
-		if (substring == findString) 
+		indexSubstringOccurrences = readLine.find(findString);
+		if (indexSubstringOccurrences == -1) 
 		{
-			LineCreation(bufStr, replaceString);
+			bufStr.append(readLine);
 		}
 		else
 		{
-			LineCreation(bufStr, currentLine.substr(k, 1));
+			bufStr.append(readLine.substr(0, indexSubstringOccurrences));
+			bufStr.append(replaceString);
+			readLine.erase(0, indexSubstringOccurrences + findString.length());
 		}
 	}
 	return bufStr;
 }
 
-bool ProgramExecution(const string inputFileName,const string findString,const string replaceString,const string outputFileName) 
+bool ReplaceStringInFile(const string &inputFileName, const string &findString, const string &replaceString, const string &outputFileName) 
 {
 	ifstream inputFile(inputFileName);
 	ofstream outputFile(outputFileName);
@@ -37,13 +35,13 @@ bool ProgramExecution(const string inputFileName,const string findString,const s
 	{
 		while (!inputFile.eof()) 
 		{
-			string currentLine;
+			string readLine;
 			string bufStr;
-			getline(inputFile, currentLine);
+			getline(inputFile, readLine);
 			bufStr = string(findString);
-			if (currentLine.length() >= bufStr.length())
+			if (readLine.length() >= bufStr.length())
 			{
-				bufStr = SearchSubstring(currentLine, findString, replaceString);
+				bufStr = SearchAndReplaceSubstring(readLine, findString, replaceString);
 			}
 			
 			outputFile.write(bufStr.c_str(), bufStr.length());
@@ -97,13 +95,13 @@ int main(int argc, char *argv[])
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
 	bool ifCanWork = InputValidation(argc);
-	string inputFileName = argv[1];
-	string outputFileName = argv[2];
-	string findString = argv[3];
-	string replaceString = argv[4];
 	if (ifCanWork) 
 	{
-		bool ifCarriedOut = ProgramExecution(inputFileName, findString, replaceString, outputFileName);
+		string inputFileName = argv[1];
+		string outputFileName = argv[2];
+		string findString = argv[3];
+		string replaceString = argv[4];
+		bool ifCarriedOut = ReplaceStringInFile(inputFileName, findString, replaceString, outputFileName);
 		CompletionChecks(ifCarriedOut);
 	}
 	return 0;
