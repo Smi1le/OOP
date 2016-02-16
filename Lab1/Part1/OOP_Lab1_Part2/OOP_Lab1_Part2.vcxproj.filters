@@ -29,7 +29,7 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="OOP_Lab1_Part1.cpp">
+    <ClCompile Include="OOP_Lab1_Part2.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
   </ItemGroup>
