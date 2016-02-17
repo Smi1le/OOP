@@ -19,11 +19,10 @@ struct Vector2i
 
 struct AppData
 {
-	int sourceMatrix[MATRIX_SIZE][MATRIX_SIZE];
-	int determinantSourceMatrix;
-	int cofactorsMatrix[MATRIX_SIZE][MATRIX_SIZE];
-	int transposedMatrix[MATRIX_SIZE][MATRIX_SIZE];
-	float inverseMatrix[MATRIX_SIZE][MATRIX_SIZE];
+	double sourceMatrix[MATRIX_SIZE][MATRIX_SIZE];
+	double determinantSourceMatrix;
+	double cofactorsMatrix[MATRIX_SIZE][MATRIX_SIZE];
+	double resultMatrix[MATRIX_SIZE][MATRIX_SIZE];
 };
 
 void ReadFromFile(AppData &appData, const string &fileName)
@@ -38,7 +37,7 @@ void ReadFromFile(AppData &appData, const string &fileName)
 	}
 }
 
-void FindDeterminantMatrix(AppData &appData)
+void FindDeterminantMatrix(AppData &appData, bool &wasError)
 {
 	appData.determinantSourceMatrix = ((appData.sourceMatrix[0][0] * pow(-1, 1 + 1) * (appData.sourceMatrix[1][1] * appData.sourceMatrix[2][2] -
 			appData.sourceMatrix[2][1] * appData.sourceMatrix[1][2])) + 
@@ -46,6 +45,10 @@ void FindDeterminantMatrix(AppData &appData)
 			appData.sourceMatrix[2][1] * appData.sourceMatrix[0][2])) + 
 		(appData.sourceMatrix[2][0] * pow(-1, 3 + 1) * (appData.sourceMatrix[0][1] * appData.sourceMatrix[1][2] -
 			appData.sourceMatrix[1][1] * appData.sourceMatrix[0][2])));
+	if (appData.determinantSourceMatrix == 0)
+	{
+		wasError = true;
+	}
 }
 
 void TransposeMatrix(AppData &appData)
@@ -54,7 +57,7 @@ void TransposeMatrix(AppData &appData)
 	{
 		for (size_t j = 0; j < MATRIX_SIZE; j++)
 		{
-			appData.transposedMatrix[j][i] = appData.cofactorsMatrix[i][j];
+			appData.resultMatrix[j][i] = appData.cofactorsMatrix[i][j];
 		}
 	}
 }
@@ -95,17 +98,6 @@ void DeterminingPositionsCellsMatrix(int &firstLine, int &firstColumn, int &seco
 	}
 }
 
-void BeInverted(AppData &appData)
-{
-	for (size_t i = 0; i < MATRIX_SIZE; i++)
-	{
-		for (size_t j = 0; j < MATRIX_SIZE; j++)
-		{
-			appData.inverseMatrix[i][j] = (1.0f / float(appData.determinantSourceMatrix)) * float(appData.transposedMatrix[i][j]);
-		}
-	}
-}
-
 void CalculationMatrixCofactors(AppData &appData)
 {
 	for (size_t i = 0; i < MATRIX_SIZE; i++)
@@ -125,17 +117,48 @@ void CalculationMatrixCofactors(AppData &appData)
 	}
 }
 
-void OutputInConsole(const AppData &appData)
+void BeInverted(AppData &appData)
 {
-	cout << "Обратная матрица: \n";
 	for (size_t i = 0; i < MATRIX_SIZE; i++)
 	{
 		for (size_t j = 0; j < MATRIX_SIZE; j++)
 		{
-			cout << appData.inverseMatrix[i][j];
-			cout << " ";
+			appData.resultMatrix[i][j] = (1.0 / appData.determinantSourceMatrix) * appData.resultMatrix[i][j];
 		}
-		cout << "\n";
+	}
+}
+
+void CalculatingInverseMatrix(AppData &appData, bool &wasError)
+{
+	FindDeterminantMatrix(appData, wasError);
+	if (!wasError)
+	{
+		CalculationMatrixCofactors(appData);
+		TransposeMatrix(appData);
+		BeInverted(appData);
+	}
+}
+
+
+
+void OutputInConsole(const AppData &appData, const bool &wasError)
+{
+	if (!wasError)
+	{
+		cout << "Обратная матрица: \n";
+		for (size_t i = 0; i < MATRIX_SIZE; i++)
+		{
+			for (size_t j = 0; j < MATRIX_SIZE; j++)
+			{
+				cout << appData.resultMatrix[i][j];
+				cout << " ";
+			}
+			cout << "\n";
+		}
+	}
+	else
+	{
+		cout << "Матрица является вырожденной\n";
 	}
 }
 
@@ -160,9 +183,9 @@ bool InputValidation(int argc)
 	}
 }
 
-void CompletionChecks(bool ifCanWork)
+void CompletionChecks(const bool &ifCanWork, const bool &wasError)
 {
-	if (ifCanWork)
+	if (ifCanWork && !wasError)
 	{
 		std::cout << "Выполнение завершено. Программа выполнена успешно." << std::endl;
 	}
@@ -177,18 +200,16 @@ int main(int argc, char *argv[])
 {
 	setlocale(LC_ALL, "rus");
 	bool ifCanWork = InputValidation(argc);
+	bool wasError = false;
 	if (ifCanWork)
 	{
 		AppData appData;
 		string inputFileName = argv[1];
 		ReadFromFile(appData, inputFileName);
-		FindDeterminantMatrix(appData);
-		CalculationMatrixCofactors(appData);
-		TransposeMatrix(appData);
-		BeInverted(appData);
-		OutputInConsole(appData);
+		CalculatingInverseMatrix(appData, wasError);
+		OutputInConsole(appData, wasError);
 	}
-	CompletionChecks(ifCanWork);
+	CompletionChecks(ifCanWork, wasError);
     return 0;
 }
 
