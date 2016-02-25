@@ -6,12 +6,12 @@
 #include <iostream>
 #include <vector>
 
-const std::string SYMBOLS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+static const std::string SYMBOLS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 int StringToInt(const char &stringForTranslation, const int &radix, bool &wasError)
 {
-	int numberTranslaredSymbol = SYMBOLS.find(stringForTranslation);
-	if (numberTranslaredSymbol <= radix - 1)
+	int numberTranslaredSymbol = SYMBOLS.find(toupper(stringForTranslation));
+	if (numberTranslaredSymbol <= radix * 1)
 	{
 		return numberTranslaredSymbol;
 	}
@@ -39,15 +39,24 @@ std::string IntToString(const int &numberForTranslation, const int &radix, bool 
 int IntoDecimalSystem(const std::string &numberForTranslation, const int &sourceNotation, bool &wasError)
 {
 	int translatedToIntNumber = 0;
-	for (size_t i = 0; i < numberForTranslation.length(); i++)
+	for (size_t i = 0; i < numberForTranslation.length();)
 	{
 		int number = StringToInt(numberForTranslation[i], sourceNotation, wasError);
-		if (wasError)
+		if (number < sourceNotation)
+		{
+			if (wasError)
+			{
+				i = numberForTranslation.length();
+				std::cout << "Ошибка! Было неверно указана одно из значение систем!\n";
+			}
+			translatedToIntNumber += number * int(pow(sourceNotation, (numberForTranslation.length() - i - 1)));
+			i++;
+		}
+		else
 		{
 			i = numberForTranslation.length();
-			std::cout << "Ошибка! Было неверно указана одно из значение систем!\n";
+			wasError = true;
 		}
-		translatedToIntNumber += number * pow(sourceNotation, (numberForTranslation.length() - i - 1));
 	}
 	return translatedToIntNumber;
 }
@@ -80,16 +89,26 @@ void OutputTheGetValue(std::string &resultingValue, const int &radix, const std:
 	std::cout << resultingValue << std::endl;
 }
 
-void TransferFromOneSystemToAnother(const std::string &numberForTranslation, const int &sourceNotation, const int &destinationNotation, bool &wasError)
+void TransferFromOneSystemToAnother(std::string &numberForTranslation, const int &sourceNotation, const int &destinationNotation, bool &wasError)
 {
 	std::string resultingValue;
+	bool positiveNumber = (numberForTranslation[0] != '-') ? true : false;
+	if (!positiveNumber)
+	{
+		numberForTranslation.erase(0, 1);
+	}
 	int numberInDecimalSystem = IntoDecimalSystem(numberForTranslation, sourceNotation, wasError);
 	if (!wasError)
 	{
+		
 		resultingValue = FromDecimalToAny(numberInDecimalSystem, destinationNotation, wasError);
 	}
 	if (!wasError)
 	{
+		if (!positiveNumber)
+		{
+			resultingValue.insert(0, "-");
+		}
 		OutputTheGetValue(resultingValue, destinationNotation, numberForTranslation);
 	}
 }
@@ -98,18 +117,16 @@ bool InputValidation(int argc)
 {
 	if (argc <= 3)
 	{
-		printf("Ошибка! Не хватает аргументов для работы программы.\n");
-		_getch();
+		printf("Ошибка! Не хватает аргументов для работы программы. Программе следует передавать 3 аргумента.\n");
 		return false;
 	}
 
 	else if (argc > 4)
 	{
-		printf("Ошибка! Слишком много аргументов для работы программы.\n");
-		_getch();
+		printf("Ошибка! Слишком много аргументов для работы программы. Программе следует передавать 3 аргумента.\n");
 		return false;
 	}
-	else if (argc == 4)
+	else
 	{
 		return true;
 	}
@@ -125,7 +142,6 @@ void CompletionChecks(bool ifCanWork, bool wasError)
 	{
 		std::cout << "Программа не выполнена." << std::endl;;
 	}
-	_getch();
 }
 
 int main(int argc, char *argv[])
@@ -135,12 +151,18 @@ int main(int argc, char *argv[])
 	bool ifCanWork = InputValidation(argc);
 	if (ifCanWork)
 	{
-		std::string numberForTranslate = argv[1];
-		int initialNumberSystem = atoi(argv[2]);
-		int destinationNumberSystem = atoi(argv[3]);
+		int initialNumberSystem = atoi(argv[1]);
+		int destinationNumberSystem = atoi(argv[2]);
+		std::string numberForTranslate = argv[3];
 		TransferFromOneSystemToAnother(numberForTranslate, initialNumberSystem, destinationNumberSystem, wasError);
 	}
 	CompletionChecks(ifCanWork, wasError);
-	_getch();
-	return 0;
+	if (!wasError)
+	{
+		return 0;
+	}
+	else
+	{
+		return 1;
+	}
 }
