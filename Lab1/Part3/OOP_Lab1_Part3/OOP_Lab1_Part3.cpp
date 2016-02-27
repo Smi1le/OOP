@@ -167,17 +167,15 @@ bool InputValidation(int argc)
 	if (argc <= 1)
 	{
 		printf("Ошибка! Не хватает аргументов для работы программы.\n");
-		_getch();
 		return false;
 	}
 
 	else if (argc > 2)
 	{
 		printf("Ошибка! Слишком много аргументов для работы программы.\n");
-		_getch();
 		return false;
 	}
-	else if (argc == 2)
+	else
 	{
 		return true;
 	}
@@ -193,7 +191,6 @@ void CompletionChecks(const bool &ifCanWork, const bool &wasError)
 	{
 		std::cout << "Программа не выполнена." << std::endl;;
 	}
-	_getch();
 }
 
 int main(int argc, char *argv[])
@@ -210,6 +207,13 @@ int main(int argc, char *argv[])
 		OutputInConsole(appData, wasError);
 	}
 	CompletionChecks(ifCanWork, wasError);
-    return 0;
+	if (!wasError)
+	{
+		return 0;
+	}
+	else
+	{
+		return 1;
+	}
 }
 
