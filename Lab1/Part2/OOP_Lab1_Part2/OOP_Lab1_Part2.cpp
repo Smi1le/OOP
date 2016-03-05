@@ -115,15 +115,9 @@ void TransferFromOneSystemToAnother(std::string &numberForTranslation, const int
 
 bool InputValidation(int argc)
 {
-	if (argc <= 3)
+	if (argc != 4)
 	{
-		printf("Ошибка! Не хватает аргументов для работы программы. Программе следует передавать 3 аргумента.\n");
-		return false;
-	}
-
-	else if (argc > 4)
-	{
-		printf("Ошибка! Слишком много аргументов для работы программы. Программе следует передавать 3 аргумента.\n");
+		printf("Ошибка! Программе следует передавать 3 аргумента.\n");
 		return false;
 	}
 	else
@@ -132,37 +126,25 @@ bool InputValidation(int argc)
 	}
 }
 
-void CompletionChecks(bool ifCanWork, bool wasError)
-{
-	if (ifCanWork && !wasError)
-	{
-		std::cout << "Выполнение завершено. Программа выполнена успешно." << std::endl;
-	}
-	else
-	{
-		std::cout << "Программа не выполнена." << std::endl;;
-	}
-}
-
 int main(int argc, char *argv[])
 {
 	setlocale(LC_ALL, "rus");
 	bool wasError = false;
-	bool ifCanWork = InputValidation(argc);
-	if (ifCanWork)
+	if (InputValidation(argc))
 	{
 		int initialNumberSystem = atoi(argv[1]);
 		int destinationNumberSystem = atoi(argv[2]);
 		std::string numberForTranslate = argv[3];
 		TransferFromOneSystemToAnother(numberForTranslate, initialNumberSystem, destinationNumberSystem, wasError);
 	}
-	CompletionChecks(ifCanWork, wasError);
 	if (!wasError)
 	{
+		std::cout << "Выполнение завершено. Программа выполнена успешно." << std::endl;
 		return 0;
 	}
 	else
 	{
+		std::cout << "Программа не выполнена." << std::endl;;
 		return 1;
 	}
 }
