@@ -17,47 +17,48 @@ struct Vector2i
 	int y;
 };
 
-struct AppData
-{
-	double sourceMatrix[MATRIX_SIZE][MATRIX_SIZE];
-	double determinantSourceMatrix;
-	double cofactorsMatrix[MATRIX_SIZE][MATRIX_SIZE];
-	double resultMatrix[MATRIX_SIZE][MATRIX_SIZE];
-};
-
-void ReadFromFile(AppData &appData, const string &fileName)
+bool ReadMatrixFromFile(double (&sourceMatrix)[MATRIX_SIZE][MATRIX_SIZE], const string &fileName)
 {
 	ifstream inputFile(fileName);
-	for (size_t i = 0; i < MATRIX_SIZE; i++)
+	if (inputFile)
 	{
-		for (size_t j = 0; j < MATRIX_SIZE; j++)
+		for (size_t i = 0; i < MATRIX_SIZE; i++)
 		{
-			inputFile >> appData.sourceMatrix[i][j];
+			for (size_t j = 0; j < MATRIX_SIZE; j++)
+			{
+				inputFile >> sourceMatrix[i][j];
+			}
 		}
+		return true;
 	}
-}
-
-void FindDeterminantMatrix(AppData &appData, bool &wasError)
-{
-	appData.determinantSourceMatrix = ((appData.sourceMatrix[0][0] * pow(-1, 1 + 1) * (appData.sourceMatrix[1][1] * appData.sourceMatrix[2][2] -
-			appData.sourceMatrix[2][1] * appData.sourceMatrix[1][2])) + 
-		(appData.sourceMatrix[1][0] * pow(-1, 2 + 1) * (appData.sourceMatrix[0][1] * appData.sourceMatrix[2][2] -
-			appData.sourceMatrix[2][1] * appData.sourceMatrix[0][2])) + 
-		(appData.sourceMatrix[2][0] * pow(-1, 3 + 1) * (appData.sourceMatrix[0][1] * appData.sourceMatrix[1][2] -
-			appData.sourceMatrix[1][1] * appData.sourceMatrix[0][2])));
-	if (appData.determinantSourceMatrix == 0)
+	else
 	{
-		wasError = true;
+		return false;
 	}
 }
 
-void TransposeMatrix(AppData &appData)
+double FindDeterminantMatrix(double(&sourceMatrix)[MATRIX_SIZE][MATRIX_SIZE], bool &matrixDegenerate)
+{
+	double determinantSourceMatrix = ((sourceMatrix[0][0] * pow(-1, 1 + 1) * (sourceMatrix[1][1] * sourceMatrix[2][2] -
+			sourceMatrix[2][1] * sourceMatrix[1][2])) + 
+		(sourceMatrix[1][0] * pow(-1, 2 + 1) * (sourceMatrix[0][1] * sourceMatrix[2][2] -
+			sourceMatrix[2][1] * sourceMatrix[0][2])) + 
+		(sourceMatrix[2][0] * pow(-1, 3 + 1) * (sourceMatrix[0][1] * sourceMatrix[1][2] -
+			sourceMatrix[1][1] * sourceMatrix[0][2])));
+	if (determinantSourceMatrix == 0)
+	{
+		matrixDegenerate = true;
+	}
+	return determinantSourceMatrix;
+}
+
+void TransposeMatrix(double(&sourceMatrix)[MATRIX_SIZE][MATRIX_SIZE], double(&cofactorsMatrix)[MATRIX_SIZE][MATRIX_SIZE])
 {
 	for (size_t i = 0; i < MATRIX_SIZE; i++)
 	{
 		for (size_t j = 0; j < MATRIX_SIZE; j++)
 		{
-			appData.resultMatrix[j][i] = appData.cofactorsMatrix[i][j];
+			sourceMatrix[j][i] = cofactorsMatrix[i][j];
 		}
 	}
 }
@@ -98,7 +99,7 @@ void DeterminingPositionsCellsMatrix(int &firstLine, int &firstColumn, int &seco
 	}
 }
 
-void CalculationMatrixCofactors(AppData &appData)
+void CalculationMatrixCofactors(const double (&sourceMatrix)[MATRIX_SIZE][MATRIX_SIZE], double (&cofactorsMatrix)[MATRIX_SIZE][MATRIX_SIZE])
 {
 	for (size_t i = 0; i < MATRIX_SIZE; i++)
 	{
@@ -106,51 +107,52 @@ void CalculationMatrixCofactors(AppData &appData)
 		{
 			Vector2i firstCell;
 			Vector2i secondCell;
-			int productFirstDiagonal;
-			int productSecondDiagonal;
+			double productFirstDiagonal;
+			double productSecondDiagonal;
 			DeterminingPositionsCellsMatrix(firstCell.x, firstCell.y, secondCell.x, secondCell.y, i, j);
-			productFirstDiagonal = appData.sourceMatrix[firstCell.x][firstCell.y] * appData.sourceMatrix[secondCell.x][secondCell.y];
+			productFirstDiagonal = sourceMatrix[firstCell.x][firstCell.y] * sourceMatrix[secondCell.x][secondCell.y];
 			DeterminingPositionsCellsMatrix(secondCell.x, firstCell.y, firstCell.x, secondCell.y, i, j);
-			productSecondDiagonal = appData.sourceMatrix[firstCell.x][firstCell.y] * appData.sourceMatrix[secondCell.x][secondCell.y];
-			appData.cofactorsMatrix[i][j] = pow(-1, (i + 1) + (j + 1)) * (productFirstDiagonal - productSecondDiagonal);
+			productSecondDiagonal = sourceMatrix[firstCell.x][firstCell.y] * sourceMatrix[secondCell.x][secondCell.y];
+			cofactorsMatrix[i][j] = pow(-1, (i + 1) + (j + 1)) * (productFirstDiagonal - productSecondDiagonal);
 		}
 	}
 }
 
-void BeInverted(AppData &appData)
+void BeInverted(double(&sourceMatrix)[MATRIX_SIZE][MATRIX_SIZE], const double determinantSourceMatrix)
 {
 	for (size_t i = 0; i < MATRIX_SIZE; i++)
 	{
 		for (size_t j = 0; j < MATRIX_SIZE; j++)
 		{
-			appData.resultMatrix[i][j] = (1.0 / appData.determinantSourceMatrix) * appData.resultMatrix[i][j];
+			sourceMatrix[i][j] = (1.0 / determinantSourceMatrix) * sourceMatrix[i][j];
 		}
 	}
 }
 
-void CalculatingInverseMatrix(AppData &appData, bool &wasError)
+void FindingInverseMatrix(double (&sourceMatrix)[MATRIX_SIZE][MATRIX_SIZE], bool &matrixDegenerate)
 {
-	FindDeterminantMatrix(appData, wasError);
-	if (!wasError)
+	double determinateSourceMatrix = FindDeterminantMatrix(sourceMatrix, matrixDegenerate);
+	if (!matrixDegenerate)
 	{
-		CalculationMatrixCofactors(appData);
-		TransposeMatrix(appData);
-		BeInverted(appData);
+		double cofactorsMatrix[MATRIX_SIZE][MATRIX_SIZE];
+		CalculationMatrixCofactors(sourceMatrix, cofactorsMatrix);
+		TransposeMatrix(sourceMatrix, cofactorsMatrix);
+		BeInverted(sourceMatrix, determinateSourceMatrix);
 	}
 }
 
 
 
-void OutputInConsole(const AppData &appData, const bool &wasError)
+void OutputInConsole(const double (&sourceMatrix)[MATRIX_SIZE][MATRIX_SIZE], const bool &matrixDegenerate)
 {
-	if (!wasError)
+	if (!matrixDegenerate)
 	{
 		cout << "Обратная матрица: \n";
 		for (size_t i = 0; i < MATRIX_SIZE; i++)
 		{
 			for (size_t j = 0; j < MATRIX_SIZE; j++)
 			{
-				cout << appData.resultMatrix[i][j];
+				cout << sourceMatrix[i][j];
 				cout << " ";
 			}
 			cout << "\n";
@@ -166,13 +168,13 @@ bool InputValidation(int argc)
 {
 	if (argc <= 1)
 	{
-		printf("Ошибка! Не хватает аргументов для работы программы.\n");
+		printf("Ошибка! Не хватает аргументов для работы программы. Программе нужно передавать 1 параметр.\n");
 		return false;
 	}
 
 	else if (argc > 2)
 	{
-		printf("Ошибка! Слишком много аргументов для работы программы.\n");
+		printf("Ошибка! Слишком много аргументов для работы программы. Программе нужно передавать 1 параметр.\n");
 		return false;
 	}
 	else
@@ -181,35 +183,50 @@ bool InputValidation(int argc)
 	}
 }
 
-void CompletionChecks(const bool &ifCanWork, const bool &wasError)
+void Filing(const double(&sourceMatrix)[MATRIX_SIZE][MATRIX_SIZE])
 {
-	if (ifCanWork && !wasError)
+	std::string outputFileName = "out.txt";
+	ofstream outputFile;
+	outputFile.open(outputFileName);
+	for (size_t i = 0; i < MATRIX_SIZE; i++)
 	{
-		std::cout << "Выполнение завершено. Программа выполнена успешно." << std::endl;
-	}
-	else
-	{
-		std::cout << "Программа не выполнена." << std::endl;;
+		for (size_t j = 0; j < MATRIX_SIZE; j++)
+		{
+			outputFile << sourceMatrix[i][j];
+			outputFile << " ";
+		}
+		outputFile << "\n";
 	}
 }
 
 int main(int argc, char *argv[])
 {
 	setlocale(LC_ALL, "rus");
-	bool ifCanWork = InputValidation(argc);
-	bool wasError = false;
-	if (ifCanWork)
+	bool matrixDegenerate = false;
+	if (InputValidation(argc))
 	{
-		AppData appData;
+		double sourceMatrix[MATRIX_SIZE][MATRIX_SIZE];
 		string inputFileName = argv[1];
-		ReadFromFile(appData, inputFileName);
-		CalculatingInverseMatrix(appData, wasError);
-		OutputInConsole(appData, wasError);
-	}
-	CompletionChecks(ifCanWork, wasError);
-	if (!wasError)
-	{
-		return 0;
+		if (ReadMatrixFromFile(sourceMatrix, inputFileName))
+		{
+			FindingInverseMatrix(sourceMatrix, matrixDegenerate);
+			OutputInConsole(sourceMatrix, matrixDegenerate);
+			if (!matrixDegenerate)
+			{
+				Filing(sourceMatrix);
+				std::cout << "Выполнение завершено. Программа выполнена успешно." << std::endl;
+				return 0;
+			}
+			else
+			{
+				std::cout << "Программа не выполнена." << std::endl;
+				return 1;
+			}
+		}
+		else
+		{
+			return 2;
+		}
 	}
 	else
 	{

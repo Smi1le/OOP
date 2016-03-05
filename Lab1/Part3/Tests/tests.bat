@@ -4,25 +4,37 @@ if %program% == "" goto err
 
 echo Test1
 %program% input.txt
+if ERRORLEVEL 2 goto noFile
 if ERRORLEVEL 1 goto testFailed
-if ERRORLEVEL 0 echo ...OK
+fc.exe out.txt reference1.txt
+if ERRORLEVEL 1 goto testFailed
+if ERRORLEVEL 0 echo 44444444444444444444444444
 
 echo Test2
 %program% input2.txt
+if ERRORLEVEL 2 goto noFile
 if ERRORLEVEL 1 goto testFailed
-if ERRORLEVEL 0 echo ...OK
 
 echo Test3
 %program% input3.txt
+if ERRORLEVEL 2 goto noFile
 if ERRORLEVEL 1 goto testFailed
-if ERRORLEVEL 0 echo ...OK
 
 echo Test4
 %program% input4.txt
+if ERRORLEVEL 2 goto noFile
 if ERRORLEVEL 1 goto testFailed
-if ERRORLEVEL 0 echo ...OK
+
+echo Test5
+%program% input5.txt
+if ERRORLEVEL 2 goto noFile
+if ERRORLEVEL 1 goto testFailed
 
 echo OK
+exit /B
+
+:noFile
+echo file is missing
 exit /B
 
 :testFailed
