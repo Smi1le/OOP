@@ -7,7 +7,7 @@
 
 using namespace std;
 
-string SearchAndReplaceSubstring(string &readLine, const string &findString, const string &replaceString) {
+string SearchAndReplaceSubstring(string &readLine, const string &findString, const string &replaceString, bool &isReplace) {
 	string bufStr;
 	int indexSubstringOccurrences = 0;
 	while (indexSubstringOccurrences != -1)
@@ -19,6 +19,7 @@ string SearchAndReplaceSubstring(string &readLine, const string &findString, con
 		}
 		else
 		{
+			isReplace = true;
 			bufStr.append(readLine.substr(0, indexSubstringOccurrences));
 			bufStr.append(replaceString);
 			readLine.erase(0, indexSubstringOccurrences + findString.length());
@@ -27,7 +28,7 @@ string SearchAndReplaceSubstring(string &readLine, const string &findString, con
 	return bufStr;
 }
 
-bool ReplaceStringInFile(const string &inputFileName, const string &findString, const string &replaceString, const string &outputFileName) 
+bool ReplaceStringInFile(const string &inputFileName, const string &findString, const string &replaceString, const string &outputFileName, bool &isReplace) 
 {
 	ifstream inputFile(inputFileName);
 	ofstream outputFile(outputFileName);
@@ -38,72 +39,61 @@ bool ReplaceStringInFile(const string &inputFileName, const string &findString, 
 			string readLine;
 			string bufStr;
 			getline(inputFile, readLine);
-			bufStr = string(findString);
 			if (readLine.length() >= bufStr.length())
 			{
-				bufStr = SearchAndReplaceSubstring(readLine, findString, replaceString);
+				bufStr = SearchAndReplaceSubstring(readLine, findString, replaceString, isReplace);
 			}
 			
 			outputFile.write(bufStr.c_str(), bufStr.length());
 			outputFile.write("\n", 1);
 		}
+		return true;
 	}
 	else
 	{
 		printf("Ошибка открытия входного файла.\n");
-		_getch();
 		return false;
 	}
 }
 
 bool InputValidation(int argc)
 {
-	if (argc <= 4)
+	if (argc != 4)
 	{
-		printf("Ошибка! Не хватает аргументов для работы программы.\n");
-		_getch();
+		printf("Неверное количество параметров. Используйте программу так: replace.exe <input file><output file><search string><replace string>");
 		return false;
-	}
-
-	else if (argc > 5)
-	{
-		printf("Ошибка! Слишком много аргументов для работы программы.\n");
-		_getch();
-		return false;
-	}
-	else if (argc == 5)
-	{
-		return true;
-	}
-}
-
-void CompletionChecks(bool ifCarriedOut)
-{
-	if (ifCarriedOut)
-	{
-		cout << "Выполнение завершено. Программа выполнена успешно." << endl;
 	}
 	else
 	{
-		cout << "Программа не выполнена." << endl;;
+		return true;
 	}
-	_getch();
 }
 
 int main(int argc, char *argv[])
 {
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
-	bool ifCanWork = InputValidation(argc);
-	if (ifCanWork) 
+	bool isReplace = false;
+	if (InputValidation(argc))
 	{
 		string inputFileName = argv[1];
 		string outputFileName = argv[2];
 		string findString = argv[3];
 		string replaceString = argv[4];
-		bool ifCarriedOut = ReplaceStringInFile(inputFileName, findString, replaceString, outputFileName);
-		CompletionChecks(ifCarriedOut);
+		if (!ReplaceStringInFile(inputFileName, findString, replaceString, outputFileName, isReplace))
+		{
+			return 2;
+		}
 	}
-	return 0;
+	if (isReplace)
+	{
+		cout << "Выполнение завершено. Программа выполнена успешно." << endl;
+		return 0;
+	}
+	else
+	{
+		cout << "Программа не выполнена." << endl;;
+		return 1;
+	}
 }	
 
