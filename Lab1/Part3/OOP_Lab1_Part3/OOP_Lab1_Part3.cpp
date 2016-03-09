@@ -197,6 +197,7 @@ int main(int argc, char *argv[])
 {
 	setlocale(LC_ALL, "rus");
 	bool matrixDegenerate = false;
+	cout << "22222222" << endl;
 	if (InputValidation(argc))
 	{
 		double sourceMatrix[MATRIX_SIZE][MATRIX_SIZE];
@@ -205,6 +206,7 @@ int main(int argc, char *argv[])
 		{
 			FindingInverseMatrix(sourceMatrix, matrixDegenerate);
 			OutputInConsole(sourceMatrix, matrixDegenerate);
+			cout << "ssssss" << endl;
 			if (!matrixDegenerate)
 			{
 				Filing(sourceMatrix);
