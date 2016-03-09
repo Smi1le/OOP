@@ -166,15 +166,9 @@ void OutputInConsole(const double (&sourceMatrix)[MATRIX_SIZE][MATRIX_SIZE], con
 
 bool InputValidation(int argc)
 {
-	if (argc <= 1)
+	if (argc != 2)
 	{
-		printf("Ошибка! Не хватает аргументов для работы программы. Программе нужно передавать 1 параметр.\n");
-		return false;
-	}
-
-	else if (argc > 2)
-	{
-		printf("Ошибка! Слишком много аргументов для работы программы. Программе нужно передавать 1 параметр.\n");
+		printf("Error! Usage invert.exe <matrixfile1.txt>.\n");
 		return false;
 	}
 	else

@@ -8,7 +8,6 @@ if ERRORLEVEL 2 goto noFile
 if ERRORLEVEL 1 goto testFailed
 fc.exe out.txt reference1.txt
 if ERRORLEVEL 1 goto testFailed
-if ERRORLEVEL 0 echo 44444444444444444444444444
 
 echo Test2
 %program% input2.txt
