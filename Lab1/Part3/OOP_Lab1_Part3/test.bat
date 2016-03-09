@@ -1,32 +1,33 @@
 rem @echo off
-SET program = "%1"
+SET program="%1"
+if %program% == "" goto err
 
 echo Test1
-%program% "Tests/input.txt"
+%program% "Tests/input.txt" >> out1.txt
 if ERRORLEVEL 2 goto noFile
 if ERRORLEVEL 1 goto testFailed
-fc.exe out.txt "Tests/reference1.txt"
+fc.exe "out1.txt" "Reference/reference1.txt"
 if ERRORLEVEL 1 goto testFailed
-if ERRORLEVEL 0 echo 44444444444444444444444444
 
 echo Test2
-%program% "Tests/input2.txt"
+%program% "Tests/input2.txt" >> out2.txt
 if ERRORLEVEL 2 goto noFile
+if ERRORLEVEL 1 goto testFailed
+fc.exe "out2.txt" "Reference/reference2.txt"
 if ERRORLEVEL 1 goto testFailed
 
 echo Test3
-%program% "Tests/input3.txt"
+%program% "Tests/input3.txt" >> out3.txt
 if ERRORLEVEL 2 goto noFile
+if ERRORLEVEL 1 goto testFailed
+fc.exe "out3.txt" "Reference/reference3.txt"
 if ERRORLEVEL 1 goto testFailed
 
 echo Test4
-%program% "Tests/input4.txt"
+%program% "Tests/input4.txt" >> out4.txt
 if ERRORLEVEL 2 goto noFile
 if ERRORLEVEL 1 goto testFailed
-
-echo Test5
-%program% "Tests/input5.txt"
-if ERRORLEVEL 2 goto noFile
+fc.exe "out4.txt" "Reference/reference4.txt"
 if ERRORLEVEL 1 goto testFailed
 
 echo OK

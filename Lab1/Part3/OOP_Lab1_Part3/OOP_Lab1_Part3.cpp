@@ -147,7 +147,6 @@ void OutputInConsole(const double (&sourceMatrix)[MATRIX_SIZE][MATRIX_SIZE], con
 {
 	if (!matrixDegenerate)
 	{
-		cout << "Обратная матрица: \n";
 		for (size_t i = 0; i < MATRIX_SIZE; i++)
 		{
 			for (size_t j = 0; j < MATRIX_SIZE; j++)
@@ -155,7 +154,8 @@ void OutputInConsole(const double (&sourceMatrix)[MATRIX_SIZE][MATRIX_SIZE], con
 				cout << sourceMatrix[i][j];
 				cout << " ";
 			}
-			cout << "\n";
+			if (i != MATRIX_SIZE - 1)
+				cout << "\n";
 		}
 	}
 	else
@@ -197,7 +197,6 @@ int main(int argc, char *argv[])
 {
 	setlocale(LC_ALL, "rus");
 	bool matrixDegenerate = false;
-	cout << "22222222" << endl;
 	if (InputValidation(argc))
 	{
 		double sourceMatrix[MATRIX_SIZE][MATRIX_SIZE];
@@ -205,12 +204,9 @@ int main(int argc, char *argv[])
 		if (ReadMatrixFromFile(sourceMatrix, inputFileName))
 		{
 			FindingInverseMatrix(sourceMatrix, matrixDegenerate);
-			OutputInConsole(sourceMatrix, matrixDegenerate);
-			cout << "ssssss" << endl;
+			OutputInConsole(sourceMatrix, matrixDegenerate);	
 			if (!matrixDegenerate)
 			{
-				Filing(sourceMatrix);
-				std::cout << "Выполнение завершено. Программа выполнена успешно." << std::endl;
 				return 0;
 			}
 			else
