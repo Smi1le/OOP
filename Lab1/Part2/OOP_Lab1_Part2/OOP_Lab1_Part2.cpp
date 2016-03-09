@@ -85,7 +85,6 @@ std::string FromDecimalToAny(const int &numberForTranslation, const int &radix, 
 
 void OutputTheGetValue(std::string &resultingValue, const int &radix, const std::string &originalValue)
 {
-	std::cout << "Получившееся значение "<< originalValue <<" в " << radix << " системе счисления: ";
 	std::cout << resultingValue << std::endl;
 }
 
@@ -117,7 +116,7 @@ bool InputValidation(int argc)
 {
 	if (argc != 4)
 	{
-		printf("Ошибка! Программе следует передавать 3 аргумента.\n");
+		printf("Error! Usage radix.exe <source notation> <destination notation> <value>.\n");
 		return false;
 	}
 	else
@@ -136,15 +135,18 @@ int main(int argc, char *argv[])
 		int destinationNumberSystem = atoi(argv[2]);
 		std::string numberForTranslate = argv[3];
 		TransferFromOneSystemToAnother(numberForTranslate, initialNumberSystem, destinationNumberSystem, wasError);
-	}
-	if (!wasError)
-	{
-		std::cout << "Выполнение завершено. Программа выполнена успешно." << std::endl;
-		return 0;
+		if (!wasError)
+		{
+			return 0;
+		}
+		else
+		{
+			std::cout << "Программа не выполнена." << std::endl;;
+			return 1;
+		}
 	}
 	else
 	{
-		std::cout << "Программа не выполнена." << std::endl;;
 		return 1;
 	}
 }

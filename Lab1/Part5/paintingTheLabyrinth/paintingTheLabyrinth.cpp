@@ -94,14 +94,6 @@ void SearchInitialPointsCoordinates(std::vector<Vector2i> &coordinatesInitialPoi
 	}
 }
 
-/*void OutputInConsole(const std::vector<std::string> &labyrinth)
-{
-	for (auto mazeLine : labyrinth)
-	{
-		std::cout << mazeLine << std::endl;
-	}
-}*/
-
 bool CanFiling(const Vector2i &coord, const std::vector<std::string> &labyrinth)
 {
 	return ((coord.y <= labyrinth[coord.x].size() - 1) &&
