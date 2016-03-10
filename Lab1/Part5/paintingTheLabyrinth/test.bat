@@ -1,7 +1,7 @@
 rem @echo off
 SET program="%1"
 echo 1
-#if %program% == "" goto err
+if %program% == "" goto err
 
 echo Test 1
 %program% "Tests/input1.txt" "output1.txt"
