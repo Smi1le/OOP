@@ -10,7 +10,6 @@ double SearchMaxElement(vector<double> const &numbers)
 {
 	auto maxNumber = max_element(numbers.begin(), numbers.end());
 	double max = distance(numbers.begin(), maxNumber);
-	cout << "\n" << "maxNumber = " << numbers[max] << endl;
 	return numbers[max];
 }
 
@@ -18,8 +17,13 @@ double SearchMinElement(vector<double> const &numbers)
 {
 	auto maxNumber = min_element(numbers.begin(), numbers.end());
 	double min = distance(numbers.begin(), maxNumber);
-	cout << "\n" << "minNumber = " << numbers[min] << endl;
 	return numbers[min];
+}
+
+void OutputInConcole(std::vector<double> &numbers)
+{
+	sort(numbers.begin(), numbers.end());
+	copy(numbers.begin(), numbers.end(), ostream_iterator<double>(cout, ", "));
 }
 
 void ConversionVectorElements(vector<double> &numbers)
@@ -30,5 +34,5 @@ void ConversionVectorElements(vector<double> &numbers)
 	{
 		element = (element * maxNumber) / minNumber;
 	}
-	copy(numbers.begin(), numbers.end(), ostream_iterator<double>(cout, ", "));
+	OutputInConcole(numbers);
 }
