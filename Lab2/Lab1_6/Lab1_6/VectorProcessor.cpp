@@ -28,11 +28,15 @@ void OutputInConcole(std::vector<double> &numbers)
 
 void ConversionVectorElements(vector<double> &numbers)
 {
-	auto minNumber = SearchMinElement(numbers);
-	auto maxNumber = SearchMaxElement(numbers);
-	for (auto &element : numbers)
+	if (!numbers.empty())
 	{
-		element = (element * maxNumber) / minNumber;
+		double minNumber = SearchMinElement(numbers);
+		double maxNumber = SearchMaxElement(numbers);
+		for (auto &element : numbers)
+		{
+			cout << "sssssssss" << endl;
+			element = (element * maxNumber) / minNumber;
+		}
 	}
-	OutputInConcole(numbers);
+	//OutputInConcole(numbers);
 }

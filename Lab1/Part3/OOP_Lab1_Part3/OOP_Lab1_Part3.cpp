@@ -5,7 +5,6 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <conio.h>
 
 using namespace std;
 
@@ -17,14 +16,16 @@ struct Vector2i
 	int y;
 };
 
-bool ReadMatrixFromFile(double (&sourceMatrix)[MATRIX_SIZE][MATRIX_SIZE], const string &fileName)
+typedef double Matrix[MATRIX_SIZE][MATRIX_SIZE];
+
+bool ReadMatrixFromFile(Matrix (&sourceMatrix), const string &fileName)
 {
 	ifstream inputFile(fileName);
 	if (inputFile)
 	{
-		for (size_t i = 0; i < MATRIX_SIZE; i++)
+		for (size_t i = 0; i < MATRIX_SIZE; ++i)
 		{
-			for (size_t j = 0; j < MATRIX_SIZE; j++)
+			for (size_t j = 0; j < MATRIX_SIZE; ++j)
 			{
 				inputFile >> sourceMatrix[i][j];
 			}
@@ -37,7 +38,7 @@ bool ReadMatrixFromFile(double (&sourceMatrix)[MATRIX_SIZE][MATRIX_SIZE], const 
 	}
 }
 
-double FindDeterminantMatrix(double(&sourceMatrix)[MATRIX_SIZE][MATRIX_SIZE], bool &matrixDegenerate)
+double FindDeterminantMatrix(Matrix (&sourceMatrix), bool &matrixDegenerate)
 {
 	double determinantSourceMatrix = ((sourceMatrix[0][0] * pow(-1, 1 + 1) * (sourceMatrix[1][1] * sourceMatrix[2][2] -
 			sourceMatrix[2][1] * sourceMatrix[1][2])) + 
@@ -52,35 +53,22 @@ double FindDeterminantMatrix(double(&sourceMatrix)[MATRIX_SIZE][MATRIX_SIZE], bo
 	return determinantSourceMatrix;
 }
 
-void TransposeMatrix(double(&sourceMatrix)[MATRIX_SIZE][MATRIX_SIZE], double(&cofactorsMatrix)[MATRIX_SIZE][MATRIX_SIZE])
+void TransposeMatrix(Matrix (&sourceMatrix),Matrix (&cofactorsMatrix))
 {
-	for (size_t i = 0; i < MATRIX_SIZE; i++)
+	for (size_t i = 0; i < MATRIX_SIZE; ++i)
 	{
-		for (size_t j = 0; j < MATRIX_SIZE; j++)
+		for (size_t j = 0; j < MATRIX_SIZE; ++j)
 		{
 			sourceMatrix[j][i] = cofactorsMatrix[i][j];
 		}
 	}
 }
 
-void DeterminingPositionsCellsMatrix(int &firstLine, int &firstColumn, int &secondLine, int &secondColumn, const int &i, const int &j)
+void DeterminePositionsCellsMatrix(int &firstLine, int &firstColumn, int &secondLine, int &secondColumn, size_t i, size_t j)
 {
-	if (i == 0)
-	{
-		firstLine = 1;
-	}
-	else if (i > 0)
-	{
-		firstLine = 0;
-	}
-	if (j == 0)
-	{
-		firstColumn = 1;
-	}
-	else if (j > 0)
-	{
-		firstColumn = 0;
-	}
+	firstLine = (i == 0) ? 1 : 0;
+	firstColumn = (j == 0) ? 1 : 0;
+
 	if (i == 2)
 	{
 		secondLine = 1;
@@ -99,76 +87,76 @@ void DeterminingPositionsCellsMatrix(int &firstLine, int &firstColumn, int &seco
 	}
 }
 
-void CalculationMatrixCofactors(const double (&sourceMatrix)[MATRIX_SIZE][MATRIX_SIZE], double (&cofactorsMatrix)[MATRIX_SIZE][MATRIX_SIZE])
+
+
+void CalculationMatrixCofactors(const Matrix (&sourceMatrix), Matrix (&cofactorsMatrix))
 {
-	for (size_t i = 0; i < MATRIX_SIZE; i++)
+	for (size_t i = 0; i < MATRIX_SIZE; ++i)
 	{
-		for (size_t j = 0; j < MATRIX_SIZE; j++)
+		for (size_t j = 0; j < MATRIX_SIZE; ++j)
 		{
 			Vector2i firstCell;
 			Vector2i secondCell;
-			double productFirstDiagonal;
-			double productSecondDiagonal;
-			DeterminingPositionsCellsMatrix(firstCell.x, firstCell.y, secondCell.x, secondCell.y, i, j);
-			productFirstDiagonal = sourceMatrix[firstCell.x][firstCell.y] * sourceMatrix[secondCell.x][secondCell.y];
-			DeterminingPositionsCellsMatrix(secondCell.x, firstCell.y, firstCell.x, secondCell.y, i, j);
-			productSecondDiagonal = sourceMatrix[firstCell.x][firstCell.y] * sourceMatrix[secondCell.x][secondCell.y];
+			DeterminePositionsCellsMatrix(firstCell.x, firstCell.y, secondCell.x, secondCell.y, i, j);
+			double productFirstDiagonal = sourceMatrix[firstCell.x][firstCell.y] * sourceMatrix[secondCell.x][secondCell.y];
+			DeterminePositionsCellsMatrix(secondCell.x, firstCell.y, firstCell.x, secondCell.y, i, j);
+			double productSecondDiagonal = sourceMatrix[firstCell.x][firstCell.y] * sourceMatrix[secondCell.x][secondCell.y];
 			cofactorsMatrix[i][j] = pow(-1, (i + 1) + (j + 1)) * (productFirstDiagonal - productSecondDiagonal);
 		}
 	}
 }
 
-void BeInverted(double(&sourceMatrix)[MATRIX_SIZE][MATRIX_SIZE], const double determinantSourceMatrix)
+void InvertMatrix(Matrix (&sourceMatrix), const double determinantSourceMatrix)
 {
-	for (size_t i = 0; i < MATRIX_SIZE; i++)
+	for (size_t i = 0; i < MATRIX_SIZE; ++i)
 	{
-		for (size_t j = 0; j < MATRIX_SIZE; j++)
+		for (size_t j = 0; j < MATRIX_SIZE; ++j)
 		{
 			sourceMatrix[i][j] = (1.0 / determinantSourceMatrix) * sourceMatrix[i][j];
 		}
 	}
 }
 
-void FindingInverseMatrix(double (&sourceMatrix)[MATRIX_SIZE][MATRIX_SIZE], bool &matrixDegenerate)
+void FindInverseMatrix(Matrix (&sourceMatrix), bool &matrixDegenerate)
 {
 	double determinateSourceMatrix = FindDeterminantMatrix(sourceMatrix, matrixDegenerate);
 	if (!matrixDegenerate)
 	{
-		double cofactorsMatrix[MATRIX_SIZE][MATRIX_SIZE];
+		Matrix cofactorsMatrix;
 		CalculationMatrixCofactors(sourceMatrix, cofactorsMatrix);
 		TransposeMatrix(sourceMatrix, cofactorsMatrix);
-		BeInverted(sourceMatrix, determinateSourceMatrix);
+		InvertMatrix(sourceMatrix, determinateSourceMatrix);
 	}
 }
 
 
 
-void OutputInConsole(const double (&sourceMatrix)[MATRIX_SIZE][MATRIX_SIZE], const bool &matrixDegenerate)
+void OutputInConsole(const Matrix (&sourceMatrix), const bool &matrixDegenerate)
 {
-	if (!matrixDegenerate)
-	{
-		for (size_t i = 0; i < MATRIX_SIZE; i++)
-		{
-			for (size_t j = 0; j < MATRIX_SIZE; j++)
-			{
-				cout << sourceMatrix[i][j];
-				cout << " ";
-			}
-			if (i != MATRIX_SIZE - 1)
-				cout << "\n";
-		}
-	}
-	else
+	if (matrixDegenerate)
 	{
 		cout << "Матрица является вырожденной\n";
+		return;
+	}
+
+	for (size_t i = 0; i < MATRIX_SIZE; ++i)
+	{
+		for (size_t j = 0; j < MATRIX_SIZE; ++j)
+		{
+			cout << sourceMatrix[i][j] << " ";
+		}
+		if (i != MATRIX_SIZE - 1)
+		{
+			cout << "\n";
+		}
 	}
 }
 
-bool InputValidation(int argc)
+bool CheckNumberArguments(int argc)
 {
 	if (argc != 2)
 	{
-		printf("Error! Usage invert.exe <matrixfile1.txt>.\n");
+		std::cout << "Error! Usage invert.exe <matrixfile1>." << std::endl;
 		return false;
 	}
 	else
@@ -177,52 +165,50 @@ bool InputValidation(int argc)
 	}
 }
 
-void Filing(const double(&sourceMatrix)[MATRIX_SIZE][MATRIX_SIZE])
+void FillMatrix(const Matrix (&sourceMatrix))
 {
 	std::string outputFileName = "out.txt";
 	ofstream outputFile;
 	outputFile.open(outputFileName);
-	for (size_t i = 0; i < MATRIX_SIZE; i++)
+	for (size_t i = 0; i < MATRIX_SIZE; ++i)
 	{
-		for (size_t j = 0; j < MATRIX_SIZE; j++)
+		for (size_t j = 0; j < MATRIX_SIZE; ++j)
 		{
-			outputFile << sourceMatrix[i][j];
-			outputFile << " ";
+			outputFile << sourceMatrix[i][j] << " ";
 		}
 		outputFile << "\n";
 	}
 }
 
+enum STATUS_CODE {ALL_IS_OK = 0, PROGRAM_ERROR = 1, CANT_READ_FILE = 2};
+
 int main(int argc, char *argv[])
 {
 	setlocale(LC_ALL, "rus");
 	bool matrixDegenerate = false;
-	if (InputValidation(argc))
+	if (!CheckNumberArguments(argc))
 	{
-		double sourceMatrix[MATRIX_SIZE][MATRIX_SIZE];
-		string inputFileName = argv[1];
-		if (ReadMatrixFromFile(sourceMatrix, inputFileName))
+		return STATUS_CODE::PROGRAM_ERROR;
+	}
+	Matrix sourceMatrix;;
+	string inputFileName = argv[1];
+	if (ReadMatrixFromFile(sourceMatrix, inputFileName))
+	{
+		FindInverseMatrix(sourceMatrix, matrixDegenerate);
+		OutputInConsole(sourceMatrix, matrixDegenerate);
+		if (!matrixDegenerate)
 		{
-			FindingInverseMatrix(sourceMatrix, matrixDegenerate);
-			OutputInConsole(sourceMatrix, matrixDegenerate);	
-			if (!matrixDegenerate)
-			{
-				return 0;
-			}
-			else
-			{
-				std::cout << "Программа не выполнена." << std::endl;
-				return 1;
-			}
+			return STATUS_CODE::ALL_IS_OK;
 		}
 		else
 		{
-			return 2;
+			std::cout << "Программа не выполнена." << std::endl;
+			return STATUS_CODE::PROGRAM_ERROR;
 		}
 	}
 	else
 	{
-		return 1;
+		return STATUS_CODE::CANT_READ_FILE;
 	}
 }
 

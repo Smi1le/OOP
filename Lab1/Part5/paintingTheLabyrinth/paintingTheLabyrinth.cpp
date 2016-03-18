@@ -22,24 +22,23 @@ struct Vector2i
 
 bool ReadLabyrinthFromFile(std::vector<std::string> &labyrinth, const std::string &inputFileName)
 {
-	std::fstream inputFile(inputFileName);
+	std::ifstream inputFile(inputFileName);
 	labyrinth.resize(MAX_SIZE);
-	int i = 0;
-	if (inputFile)
-	{
-		while (!inputFile.eof())
-		{
-			std::string readLineFromFile;
-			std::getline(inputFile, readLineFromFile);
-			labyrinth[i] = readLineFromFile;
-			i++;
-		}
-		return true;
-	}
-	else
+
+	if (!inputFile)
 	{
 		return false;
 	}
+
+	int i = 0;
+	while (!inputFile.eof())
+	{
+		std::string readLineFromFile;
+		std::getline(inputFile, readLineFromFile);
+		labyrinth[i] = readLineFromFile;
+		i++;
+	}
+	return true;
 }
 
 void ChangeLabyrinthSizes100To100(std::vector<std::string> &labyrinth)
@@ -75,8 +74,7 @@ void SearchInitialPointsCoordinates(std::vector<Vector2i> &coordinatesInitialPoi
 	int i = 0;
 	for (auto mazeLine : labyrinth)
 	{
-
-		int numberPositionInitialPoints = int(std::min(mazeLine.find(START_SYMBOL), mazeLine.find(tolower(START_SYMBOL))));
+		int numberPositionInitialPoints = (std::min(mazeLine.find(START_SYMBOL), mazeLine.find(tolower(START_SYMBOL))));
 		do
 		{
 			if (numberPositionInitialPoints != -1)
@@ -90,7 +88,7 @@ void SearchInitialPointsCoordinates(std::vector<Vector2i> &coordinatesInitialPoi
 	}
 }
 
-bool CanFiling(const Vector2i &coord, const std::vector<std::string> &labyrinth)
+bool CanFilling(const Vector2i &coord, const std::vector<std::string> &labyrinth)
 {
 	return ((coord.y <= labyrinth[coord.x].size() - 1) &&
 		(toupper(labyrinth[coord.x][coord.y]) == EMPTY));
@@ -101,12 +99,12 @@ void CheckTheNeighbouringElements(std::queue<Vector2i> &allForPainting, std::vec
 	if (coordinates.x >= 0 && coordinates.y > 0 && (coordinates.x < labyrinth.size() - 1))
 	{
 
-		if (CanFiling({ coordinates.x , coordinates.y + 1 }, labyrinth))
+		if (CanFilling({ coordinates.x , coordinates.y + 1 }, labyrinth))
 		{
 			labyrinth[coordinates.x][coordinates.y + 1] = POINT;
 			allForPainting.push({ coordinates.x, coordinates.y + 1 });
 		}
-		if (CanFiling({ coordinates.x + 1 , coordinates.y }, labyrinth))
+		if (CanFilling({ coordinates.x + 1 , coordinates.y }, labyrinth))
 		{
 			labyrinth[coordinates.x + 1][coordinates.y] = POINT;
 			allForPainting.push({ coordinates.x + 1, coordinates.y });
@@ -114,12 +112,12 @@ void CheckTheNeighbouringElements(std::queue<Vector2i> &allForPainting, std::vec
 	}
 	if (coordinates.x > 0 && coordinates.y >= 0 && (coordinates.x < labyrinth.size() - 1))
 	{
-		if (CanFiling({ coordinates.x - 1 , coordinates.y }, labyrinth))
+		if (CanFilling({ coordinates.x - 1 , coordinates.y }, labyrinth))
 		{
 			labyrinth[coordinates.x - 1][coordinates.y] = POINT;
 			allForPainting.push({ coordinates.x - 1, coordinates.y });
 		}
-		if (CanFiling({ coordinates.x , coordinates.y - 1 }, labyrinth))
+		if (CanFilling({ coordinates.x , coordinates.y - 1 }, labyrinth))
 		{
 			labyrinth[coordinates.x][coordinates.y - 1] = POINT;
 			allForPainting.push({ coordinates.x, coordinates.y - 1 });
@@ -128,7 +126,7 @@ void CheckTheNeighbouringElements(std::queue<Vector2i> &allForPainting, std::vec
 	}
 }
 
-void Filing(const std::string outputFileName, const std::vector<std::string> &labyrinth)
+void Filling(std::string const& outputFileName, const std::vector<std::string> &labyrinth)
 {
 	std::ofstream outputFile(outputFileName);
 	for (auto readLine : labyrinth)
@@ -152,13 +150,6 @@ void PaintingTheLabyrinth(std::vector<std::string> &labyrinth)
 		{
 			Vector2i coordinates = allForPainting.front();
 			allForPainting.pop();
-			if (coordinates.x >= 0 && coordinates.y >= 0 && (coordinates.x <= labyrinth.size() - 1))
-			{
-				if (labyrinth[coordinates.x][coordinates.y] == ' ')
-				{
-					labyrinth[coordinates.x][coordinates.y] = POINT;
-				}
-			}
 			CheckTheNeighbouringElements(allForPainting, labyrinth, coordinates);
 		}
 	}
@@ -179,7 +170,7 @@ int main(int argc, char *argv[])
 	{
 		std::string outputFileName = argv[2];
 		PaintingTheLabyrinth(labyrinth);
-		Filing(outputFileName, labyrinth);
+		Filling(outputFileName, labyrinth);
 		return 0;
 	}
 	else
