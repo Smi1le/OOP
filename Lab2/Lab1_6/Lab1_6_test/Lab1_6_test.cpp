@@ -45,3 +45,5 @@ int main(int argc, char* argv[])
 	// Запускаем тесты, передавая параметры командной строки и кастомную функцию инициализации тестов
 	return boost::unit_test::unit_test_main(&init_unit_test_suite, argc, argv);
 }
+
+

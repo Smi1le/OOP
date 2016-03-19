@@ -22,7 +22,7 @@ double SearchMinElement(vector<double> const &numbers)
 
 void OutputInConcole(std::vector<double> &numbers)
 {
-	sort(numbers.begin(), numbers.end());
+	
 	copy(numbers.begin(), numbers.end(), ostream_iterator<double>(cout, ", "));
 }
 
@@ -34,9 +34,9 @@ void ConversionVectorElements(vector<double> &numbers)
 		double maxNumber = SearchMaxElement(numbers);
 		for (auto &element : numbers)
 		{
-			cout << "sssssssss" << endl;
 			element = (element * maxNumber) / minNumber;
 		}
 	}
+	sort(numbers.begin(), numbers.end());
 	//OutputInConcole(numbers);
 }
