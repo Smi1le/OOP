@@ -24,7 +24,7 @@
     <ClInclude Include="targetver.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="..\Lab2_3\ProccesorMap.h">
+    <ClInclude Include="..\Lab2_3\ProcessorMap.h">
       <Filter>Файлы исходного кода</Filter>
     </ClInclude>
   </ItemGroup>
