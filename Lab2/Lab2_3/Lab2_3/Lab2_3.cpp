@@ -4,17 +4,23 @@
 #include "stdafx.h"
 #include <iostream>
 #include <string>
-#include "ProccesorMap.h"
+#include "ProcessorMap.h"
 
 using namespace std;
 
-int main()
+enum STATUS_CODE {ITS_ALL_OK = 0, ERROR = 1};
+
+int main(int argc, char *argv[])
 {
+	if (argc != 3)
+	{
+		cout << "Error! Usage replace.exe<search-string><replace-string>/n";
+		return STATUS_CODE::ERROR;
+	}
 	string subject = "I can Fly, maybe. You can?";
-	string search = "can";
-	string replace = "trololo";
+	string search = argv[1];
+	string replace = argv[2];
 	string str = FindAndReplace(subject, search, replace);
-	cout << str << endl;
-	return 0;
+	return STATUS_CODE::ITS_ALL_OK;
 }
 
