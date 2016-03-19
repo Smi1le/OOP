@@ -8,22 +8,14 @@ using namespace std;
 
 double SearchMaxElement(vector<double> const &numbers)
 {
-	auto maxNumber = max_element(numbers.begin(), numbers.end());
-	double max = distance(numbers.begin(), maxNumber);
-	return numbers[max];
+	return *max_element(numbers.begin(), numbers.end());
+	
 }
 
 double SearchMinElement(vector<double> const &numbers)
 {
-	auto maxNumber = min_element(numbers.begin(), numbers.end());
-	double min = distance(numbers.begin(), maxNumber);
-	return numbers[min];
-}
-
-void OutputInConcole(std::vector<double> &numbers)
-{
+	return *min_element(numbers.begin(), numbers.end());
 	
-	copy(numbers.begin(), numbers.end(), ostream_iterator<double>(cout, ", "));
 }
 
 void ConversionVectorElements(vector<double> &numbers)
@@ -38,5 +30,4 @@ void ConversionVectorElements(vector<double> &numbers)
 		}
 	}
 	sort(numbers.begin(), numbers.end());
-	//OutputInConcole(numbers);
 }
