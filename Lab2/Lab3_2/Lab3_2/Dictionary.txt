@@ -1,0 +1,6 @@
+Father:отец
+Mother:мама
+Soon:сын
+The Red Square: расна€ площадь
+ball:м€ч
+meat:м€со
