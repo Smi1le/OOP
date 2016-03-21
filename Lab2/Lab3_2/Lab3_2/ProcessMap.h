@@ -14,4 +14,11 @@
 
 typedef std::map<std::string, std::string> Dictionary;
 
-void ProcessMap();
+void ProcessMap(std::string const &nameDictionary);
+std::string LineReception();
+Dictionary ReadDictionaryWithFile(std::string const &nameDictionary);
+bool InspectionLine(std::string &keyToFind);
+bool SearchByKeyValues(Dictionary const &dictionary, std::string const &keyToFind, std::string &value);
+void WorkWithDictionary(Dictionary &dictionary, std::string const &nameDictionary);
+void Save(Dictionary &dictionary, std::string const &nameDictionary);
+void FillDictionary(Dictionary const &dictionary, std::string const &nameDictionary);

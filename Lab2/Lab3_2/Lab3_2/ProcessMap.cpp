@@ -3,21 +3,23 @@
 
 using namespace std;
 
-static const string DICTIONARY = "dictionary.txt";
 static const string EXIT = "...";
 static const string EMPTY_STRING = "";
 static const char YES = 'Y';
 
-Dictionary ReadDictionaryWithFile()
+Dictionary ReadDictionaryWithFile(std::string const &nameDictionary)
 {
-	ifstream inputFile(DICTIONARY);
-	string fileString;
+	ifstream inputFile(nameDictionary);
 	Dictionary dictionary;
-	while (getline(inputFile, fileString))
+	if (inputFile)
 	{
-		vector<string> stringDict;
-		boost::split(stringDict, fileString, boost::is_any_of(":"));
-		dictionary.insert(pair<string, string>(stringDict[0], stringDict[1]));
+		string fileString;
+		while (getline(inputFile, fileString))
+		{
+			vector<string> stringDict;
+			boost::split(stringDict, fileString, boost::is_any_of(":"));
+			dictionary.insert(pair<string, string>(stringDict[0], stringDict[1]));
+		}
 	}
 	return dictionary;
 }
@@ -67,28 +69,28 @@ void AddNewWordInDictionary(Dictionary &dictionary, string const &keyToFind, str
 	cout << "Слово " << keyToFind << " сохранено в словаре как " << newValueForNewKey << "." << endl;
 }
 
-void FillDictionary(Dictionary const &dictionary)
+void FillDictionary(Dictionary const &dictionary, std::string const &nameDictionary)
 {
-	ofstream outFile(DICTIONARY);
+	ofstream outFile(nameDictionary);
 	for (auto pair : dictionary)
 	{
 		outFile << pair.first << ":" << pair.second << endl;
 	}
 }
 
-void Save(Dictionary &dictionary)
+void Save(Dictionary &dictionary, std::string const &nameDictionary)
 {
 	cout << "В словарь были внесены изменения. Если желаете их сохранить то введите Y\n";
 	char agreement;
 	cin >> agreement;
 	if (toupper(agreement) == YES)
 	{
-		FillDictionary(dictionary);
+		FillDictionary(dictionary, nameDictionary);
 		cout << "Изменения были сохранены в словарь. Спасибо за работу. До свидания." << endl;
 	}
 }
 
-void WorkWithDictionary(Dictionary &dictionary)
+void WorkWithDictionary(Dictionary &dictionary, std::string const &nameDictionary)
 {
 	string keyToFind;
 	bool wasAdd = false;
@@ -117,21 +119,21 @@ void WorkWithDictionary(Dictionary &dictionary)
 	}
 	if (wasAdd)
 	{
-		Save(dictionary);
+		Save(dictionary, nameDictionary);
 	}
 }
 
-void UserInteraction()
+void UserInteraction(std::string const &nameDictionary)
 {
-	Dictionary dictionary = ReadDictionaryWithFile();
-	WorkWithDictionary(dictionary);
-	Output(dictionary);
+	Dictionary dictionary = ReadDictionaryWithFile(nameDictionary);
+	WorkWithDictionary(dictionary, nameDictionary);
+	//Output(dictionary);
 }
 
-void ProcessMap()
+void ProcessMap(std::string const &nameDictionary)
 {
 	SetConsoleOutputCP(1251);
 	SetConsoleCP(1251);
-	UserInteraction();
+	UserInteraction(nameDictionary);
 }
 
