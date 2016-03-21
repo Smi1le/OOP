@@ -5,7 +5,7 @@ using namespace std;
 
 set<int> SieveOfEratosthenes(vector<bool> &arrayOfBool)
 {
-	set<int> primeNumbersList;
+	set<int> primeNumbersList = { 1 };
 	for (size_t i = 2; ((i*i) <= arrayOfBool.size() - 1); ++i)
 	{
 		if (arrayOfBool[i])
@@ -16,7 +16,6 @@ set<int> SieveOfEratosthenes(vector<bool> &arrayOfBool)
 				{
 					arrayOfBool[j] = false;
 				}
-				//primeNumbersList.insert(static_cast<int>(j));
 			}
 		}
 	}
