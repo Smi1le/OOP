@@ -11,8 +11,6 @@
 
 static const char START_SYMBOL = 'O';
 static const char POINT = '.';
-static const char EMPTY = ' ';
-static const int MAX_SIZE = 100;
 
 struct Vector2i
 {
@@ -20,52 +18,59 @@ struct Vector2i
 	int y;
 };
 
+struct AppData
+{
+	
+	
+};
+
 bool ReadLabyrinthFromFile(std::vector<std::string> &labyrinth, const std::string &inputFileName)
 {
-	std::ifstream inputFile(inputFileName);
-	labyrinth.resize(MAX_SIZE);
-
-	if (!inputFile)
+	std::fstream inputFile(inputFileName);
+	labyrinth.resize(100);
+	int i = 0;
+	if (inputFile)
+	{
+		while (!inputFile.eof())
+		{
+			std::string readLineFromFile;
+			std::getline(inputFile, readLineFromFile);
+			labyrinth[i] = readLineFromFile;
+			i++;
+		}
+		return true;
+	}
+	else
 	{
 		return false;
 	}
-
-	int i = 0;
-	while (!inputFile.eof())
-	{
-		std::string readLineFromFile;
-		std::getline(inputFile, readLineFromFile);
-		labyrinth[i] = readLineFromFile;
-		i++;
-	}
-	return true;
 }
 
-void ChangeLabyrinthSizes100To100(std::vector<std::string> &labyrinth)
+void ChangeVectorSizes100To100(std::vector<std::string> &labyrinth)
 {
 	for (size_t i = 0; i < labyrinth.size();)
 	{
 		std::string lineArray = labyrinth[i];
 		if (lineArray.size() == 0)
 		{
-			while (i < MAX_SIZE)
+			while (i < 100)
 			{
 				std::string stringWithSpaces;
-				stringWithSpaces.resize(MAX_SIZE, EMPTY);
+				stringWithSpaces.resize(100, ' ');
 				labyrinth[i] = stringWithSpaces;
 				i++;
 			}
 		}
-		else if (lineArray.size() < MAX_SIZE)
+		else if (lineArray.size() < 100)
 		{
-			while (lineArray.size() < MAX_SIZE)
+			while (lineArray.size() < 100)
 			{
 				lineArray.append(" ");
 			}
 			labyrinth[i] = lineArray;
 			i++;
 		}
-
+		
 	}
 }
 
@@ -74,37 +79,46 @@ void SearchInitialPointsCoordinates(std::vector<Vector2i> &coordinatesInitialPoi
 	int i = 0;
 	for (auto mazeLine : labyrinth)
 	{
-		int numberPositionInitialPoints = (std::min(mazeLine.find(START_SYMBOL), mazeLine.find(tolower(START_SYMBOL))));
+		
+		int numberPositionInitialPoints = std::min(mazeLine.find(START_SYMBOL), mazeLine.find(tolower(START_SYMBOL)));
 		do
 		{
 			if (numberPositionInitialPoints != -1)
 			{
 				mazeLine.erase(numberPositionInitialPoints, 1);
 				coordinatesInitialPoints.push_back({ i, numberPositionInitialPoints + 1 });
-				numberPositionInitialPoints = int(std::min(mazeLine.find(START_SYMBOL), mazeLine.find(tolower(START_SYMBOL))));
+				numberPositionInitialPoints = std::min(mazeLine.find(START_SYMBOL), mazeLine.find(tolower(START_SYMBOL)));
 			}
 		} while (numberPositionInitialPoints != -1);
 		i++;
 	}
 }
 
-bool CanFilling(const Vector2i &coord, const std::vector<std::string> &labyrinth)
+void OutputInConsole(const std::vector<std::string> &labyrinth)
+{
+	for (auto mazeLine : labyrinth)
+	{
+		std::cout << mazeLine << std::endl;
+	}
+}
+
+bool CanFiling(const Vector2i &coord, const std::vector<std::string> &labyrinth)
 {
 	return ((coord.y <= labyrinth[coord.x].size() - 1) &&
-		(toupper(labyrinth[coord.x][coord.y]) == EMPTY));
+		(toupper(labyrinth[coord.x][coord.y]) == ' '));
 }
 
 void CheckTheNeighbouringElements(std::queue<Vector2i> &allForPainting, std::vector<std::string> &labyrinth, const Vector2i &coordinates)
 {
 	if (coordinates.x >= 0 && coordinates.y > 0 && (coordinates.x < labyrinth.size() - 1))
 	{
-
-		if (CanFilling({ coordinates.x , coordinates.y + 1 }, labyrinth))
+		
+		if (CanFiling({ coordinates.x , coordinates.y + 1 }, labyrinth))
 		{
 			labyrinth[coordinates.x][coordinates.y + 1] = POINT;
 			allForPainting.push({ coordinates.x, coordinates.y + 1 });
 		}
-		if (CanFilling({ coordinates.x + 1 , coordinates.y }, labyrinth))
+		if (CanFiling({ coordinates.x + 1 , coordinates.y }, labyrinth))
 		{
 			labyrinth[coordinates.x + 1][coordinates.y] = POINT;
 			allForPainting.push({ coordinates.x + 1, coordinates.y });
@@ -112,21 +126,21 @@ void CheckTheNeighbouringElements(std::queue<Vector2i> &allForPainting, std::vec
 	}
 	if (coordinates.x > 0 && coordinates.y >= 0 && (coordinates.x < labyrinth.size() - 1))
 	{
-		if (CanFilling({ coordinates.x - 1 , coordinates.y }, labyrinth))
+		if (CanFiling({ coordinates.x - 1 , coordinates.y }, labyrinth))
 		{
 			labyrinth[coordinates.x - 1][coordinates.y] = POINT;
 			allForPainting.push({ coordinates.x - 1, coordinates.y });
 		}
-		if (CanFilling({ coordinates.x , coordinates.y - 1 }, labyrinth))
+		if (CanFiling({ coordinates.x , coordinates.y - 1 }, labyrinth))
 		{
 			labyrinth[coordinates.x][coordinates.y - 1] = POINT;
 			allForPainting.push({ coordinates.x, coordinates.y - 1 });
 		}
-
+		
 	}
 }
 
-void Filling(std::string const& outputFileName, const std::vector<std::string> &labyrinth)
+void Filing(const std::string outputFileName, const std::vector<std::string> &labyrinth)
 {
 	std::ofstream outputFile(outputFileName);
 	for (auto readLine : labyrinth)
@@ -137,7 +151,7 @@ void Filling(std::string const& outputFileName, const std::vector<std::string> &
 
 void PaintingTheLabyrinth(std::vector<std::string> &labyrinth)
 {
-	ChangeLabyrinthSizes100To100(labyrinth);
+	ChangeVectorSizes100To100(labyrinth);
 	std::vector<Vector2i> coordinatesInitialPoints;
 	SearchInitialPointsCoordinates(coordinatesInitialPoints, labyrinth);
 	while (!coordinatesInitialPoints.empty())
@@ -146,10 +160,17 @@ void PaintingTheLabyrinth(std::vector<std::string> &labyrinth)
 		auto lastElement = coordinatesInitialPoints.size() - 1;
 		allForPainting.push(coordinatesInitialPoints[lastElement]);
 		coordinatesInitialPoints.pop_back();
-		while (!allForPainting.empty())
+		while (!allForPainting.empty()) 
 		{
 			Vector2i coordinates = allForPainting.front();
 			allForPainting.pop();
+			if (coordinates.x >= 0 && coordinates.y >= 0 && (coordinates.x <= labyrinth.size() - 1))
+			{
+				if (labyrinth[coordinates.x][coordinates.y] == ' ')
+				{
+					labyrinth[coordinates.x][coordinates.y] = POINT;
+				}
+			}
 			CheckTheNeighbouringElements(allForPainting, labyrinth, coordinates);
 		}
 	}
@@ -168,9 +189,11 @@ int main(int argc, char *argv[])
 	std::string inputFileName = argv[1];
 	if (ReadLabyrinthFromFile(labyrinth, inputFileName))
 	{
+		OutputInConsole(labyrinth);
 		std::string outputFileName = argv[2];
 		PaintingTheLabyrinth(labyrinth);
-		Filling(outputFileName, labyrinth);
+		OutputInConsole(labyrinth);
+		Filing(outputFileName, labyrinth);
 		return 0;
 	}
 	else

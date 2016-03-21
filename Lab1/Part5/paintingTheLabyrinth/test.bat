@@ -24,14 +24,6 @@ if ERRORLEVEL 1 goto testFailed
 fc.exe "output3.txt" "Reference/reference3.txt"
 if ERRORLEVEL 1 goto testFailed
 
-echo Test 4
-%program% "Tests/input4.txt" "output4.txt"
-if ERRORLEVEL 2 goto noFile
-if ERRORLEVEL 1 goto testFailed
-fc.exe "output4.txt" "output4.txt"
-if ERRORLEVEL 1 goto testFailed
-
-
 echo OK
 exit /B
 
