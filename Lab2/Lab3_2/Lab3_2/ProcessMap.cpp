@@ -76,7 +76,7 @@ bool SearchByKeyValues(Dictionary const &dictionary, string const &keyToFind, ve
 
 void AddNewWordInDictionary(Dictionary &dictionary, string const &keyToFind, string const &newValueForNewKey)
 {
-	dictionary.insert(pair<string, string>(keyToFind, newValueForNewKey));
+	dictionary.insert(dictionary.end(), pair<string, string>(keyToFind, newValueForNewKey));
 	cout << "Слово " << keyToFind << " сохранено в словаре как " << newValueForNewKey << "." << endl;
 }
 
