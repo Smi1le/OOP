@@ -1,5 +1,11 @@
 #include "stdafx.h"
 #include "ProcessMap.h"
+#include <iostream>
+#include <fstream>
+#include <Windows.h>
+#include <iterator>
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string.hpp>
 
 using namespace std;
 
@@ -18,7 +24,7 @@ Dictionary ReadDictionaryWithFile(std::string const &nameDictionary)
 		{
 			vector<string> stringDict;
 			boost::split(stringDict, fileString, boost::is_any_of(":"));
-			dictionary.insert(pair<string, string>(stringDict[0], stringDict[1]));
+			dictionary.insert(dictionary.end(), pair<string, string>(stringDict[0], stringDict[1]));
 		}
 	}
 	return dictionary;
@@ -32,35 +38,40 @@ void Output(Dictionary const &dict)
 	}
 }
 
-string LineReception()
+bool receiptSearchKey(string &keyToFind)
 {
 	cout << "Пожалуйста, введите ключ для поиска.\n";
-	string inString;
-	getline(cin, inString);
-	return inString;
+	getline(cin, keyToFind);
+	return keyToFind == EXIT ? false : true;
 }
 
-bool InspectionLine(string &keyToFind)
+string ToUpper(string const &toUpperString)
 {
-	keyToFind = LineReception();
-	if (keyToFind == EXIT)
+	string bufStr;
+	for (auto ch : toUpperString)
 	{
-		return false;
+		bufStr += toupper(ch);
 	}
-	return true;
+	return bufStr;
 }
 
-bool SearchByKeyValues(Dictionary const &dictionary, string const &keyToFind, string &value)
+bool SearchByKeyValues(Dictionary const &dictionary, string const &keyToFind, vector<string> &value)
 {
+	bool wasFind = false;
 	for (auto it = dictionary.begin(); it != dictionary.end(); ++it)
 	{
-		if (it->first == keyToFind)
+		if (ToUpper(it->first) == ToUpper(keyToFind))
 		{
-			value = it->second;
-			return true;
+			value.push_back(it->second);
+			wasFind = true;
+		}
+		if (ToUpper(it->second) == ToUpper(keyToFind))
+		{
+			value.push_back(it->first);
+			wasFind = true;
 		}
 	}
-	return false;
+	return wasFind;
 }
 
 void AddNewWordInDictionary(Dictionary &dictionary, string const &keyToFind, string const &newValueForNewKey)
@@ -90,16 +101,16 @@ void Save(Dictionary &dictionary, std::string const &nameDictionary)
 	}
 }
 
-void WorkWithDictionary(Dictionary &dictionary, std::string const &nameDictionary)
+void UserIntaraction(Dictionary &dictionary, std::string const &nameDictionary)
 {
 	string keyToFind;
 	bool wasAdd = false;
-	while (InspectionLine(keyToFind))
+	while (receiptSearchKey(keyToFind))
 	{
-		string value;
-		if (SearchByKeyValues(dictionary, keyToFind, value))
+		vector<string> values;
+		if (SearchByKeyValues(dictionary, keyToFind, values))
 		{
-			cout << value << endl;
+			copy(values.begin(), values.end(), ostream_iterator<string>(cout, "\n"));
 		}
 		else
 		{
@@ -123,10 +134,10 @@ void WorkWithDictionary(Dictionary &dictionary, std::string const &nameDictionar
 	}
 }
 
-void UserInteraction(std::string const &nameDictionary)
+void WorkWithDictionary(std::string const &nameDictionary)
 {
 	Dictionary dictionary = ReadDictionaryWithFile(nameDictionary);
-	WorkWithDictionary(dictionary, nameDictionary);
+	UserIntaraction(dictionary, nameDictionary);
 	//Output(dictionary);
 }
 
@@ -134,6 +145,6 @@ void ProcessMap(std::string const &nameDictionary)
 {
 	SetConsoleOutputCP(1251);
 	SetConsoleCP(1251);
-	UserInteraction(nameDictionary);
+	WorkWithDictionary(nameDictionary);
 }
 

@@ -1,0 +1,9 @@
+Cat:кошак
+cAt:кошка
+caT:шкура
+dog:собака
+dog:шаурма
+mother:мама
+true:правда
+МаМа:MoTHeR
+ляляля:cat
