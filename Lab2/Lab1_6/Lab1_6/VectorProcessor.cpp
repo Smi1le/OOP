@@ -6,28 +6,22 @@
 
 using namespace std;
 
-double SearchMaxElement(vector<double> const &numbers)
+void OutputInConsole(vector<double> const &numbers)
 {
-	return *max_element(numbers.begin(), numbers.end());
-	
-}
-
-double SearchMinElement(vector<double> const &numbers)
-{
-	return *min_element(numbers.begin(), numbers.end());
-	
+	copy(numbers.begin(), numbers.end(), std::ostream_iterator<double>(cout, ", "));
+	cout << endl;
 }
 
 void ConversionVectorElements(vector<double> &numbers)
 {
 	if (!numbers.empty())
 	{
-		double minNumber = SearchMinElement(numbers);
-		double maxNumber = SearchMaxElement(numbers);
+		double minNumber = *min_element(numbers.begin(), numbers.end());;
+		double maxNumber = *max_element(numbers.begin(), numbers.end());
 		for (auto &element : numbers)
 		{
-			element = (element * maxNumber) / minNumber;
+			minNumber != 0 ? element *= maxNumber / minNumber : element *= maxNumber;
 		}
 	}
-	sort(numbers.begin(), numbers.end());
+	OutputInConsole(numbers);
 }
