@@ -2,31 +2,32 @@
 #include "ProcessSet.h"
 #include <iterator>
 #include <vector>
-
+#include <iostream>
 
 using namespace std;
 
-set<int> SieveOfEratosthenes(vector<bool> &arrayOfBool)
+set<int> SieveOfEratosthenes(vector<bool> &vectorOfBool)
 {
-	set<int> primeNumbersList = { 1 };
-	for (size_t i = 2; ((i*i) <= arrayOfBool.size() - 1); ++i)
+	set<int> primeNumbersList;
+	for (size_t i = 2; ((i*i) <= vectorOfBool.size() - 1); ++i)
 	{
-		if (arrayOfBool[i])
+		if (vectorOfBool[i])
 		{
-			for (size_t j = (i*i); j <= arrayOfBool.size() - 1; j += i)
+			for (size_t j = (i*i); j <= vectorOfBool.size() - 1; j += i)
 			{
-				if (arrayOfBool[j])
+				if (vectorOfBool[j])
 				{
-					arrayOfBool[j] = false;
+					vectorOfBool[j] = false;
 				}
 			}
 		}
 	}
-	for (size_t i = 1; i <= arrayOfBool.size(); ++i)
+
+	for (size_t i = 2; i <= vectorOfBool.size(); ++i)
 	{
-		if (arrayOfBool[i])
+		if (vectorOfBool[i])
 		{
-			primeNumbersList.insert(static_cast<int>(i));
+			primeNumbersList.insert(primeNumbersList.end(), static_cast<int>(i));
 		}
 	}
 	return primeNumbersList;
@@ -34,14 +35,12 @@ set<int> SieveOfEratosthenes(vector<bool> &arrayOfBool)
 
 void OutputInConsole(set<int> const &primeNumbersList)
 {
-	copy(primeNumbersList.begin(), primeNumbersList.end(), ostream_iterator<int>(cout, " "));
+	copy(primeNumbersList.begin(), primeNumbersList.end(), ostream_iterator<int>(cout, ", "));
 }
 
 set<int> GeneratePrimeNumbersSet(int const &upperBound)
 {
-	vector<bool> arrayOfBool;
-	arrayOfBool.resize(upperBound, true);
-	set<int> primeNumbersList;
-	primeNumbersList = SieveOfEratosthenes(arrayOfBool);
-	return primeNumbersList;
+	vector<bool> vectorOfBool;
+	vectorOfBool.resize(upperBound + 1, true);
+	return SieveOfEratosthenes(vectorOfBool);
 }
