@@ -8,9 +8,7 @@ BOOST_AUTO_TEST_SUITE(ProcessSet_function)
 BOOST_AUTO_TEST_CASE(we_pass_one_get_one)
 {
 	std::set<int> unit = { 1 };
-	std::set<int> kdsj = GeneratePrimeNumbersSet(1);
-	std::copy(kdsj.begin(), kdsj.end(), std::ostream_iterator<int>(std::cout, " "));
-	BOOST_CHECK(kdsj == unit);
+	BOOST_CHECK(GeneratePrimeNumbersSet(1) == unit);
 }
 
 BOOST_AUTO_TEST_CASE(screening_of_ten_numbers)
