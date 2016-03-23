@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "ProcessSet.h"
+#include <iterator>
+#include <vector>
+
 
 using namespace std;
 
