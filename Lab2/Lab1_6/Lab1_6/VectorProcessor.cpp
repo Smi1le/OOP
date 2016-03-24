@@ -2,6 +2,7 @@
 #include "VectorProcessor.h"
 #include <algorithm>
 #include <iterator>
+#include <iostream>
 
 
 using namespace std;
@@ -23,5 +24,4 @@ void ConversionVectorElements(vector<double> &numbers)
 			minNumber != 0 ? element *= maxNumber / minNumber : element *= maxNumber;
 		}
 	}
-	OutputInConsole(numbers);
 }
