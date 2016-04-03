@@ -5,11 +5,13 @@
 
 #pragma once
 
+
+
 #include "targetver.h"
 
 #include <stdio.h>
 #include <tchar.h>
 
-
+#pragma warning (disable: 4996)
 
 // TODO: Установите здесь ссылки на дополнительные заголовки, требующиеся для программы
