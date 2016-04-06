@@ -2,14 +2,12 @@
 #include "CCar.h"
 #include <iostream>
 #include <iterator>
-#include <boost/algorithm/string.hpp>
-#include <boost/algorithm/string/split.hpp>
 
 
 
 using namespace std;
 
-bool CCar::SetCommand()
+/*bool CCar::SetCommand()
 {
 	cout << "Please enter command\n";
 	string command;
@@ -47,7 +45,7 @@ bool CCar::SetCommand()
 	}
 	return true;
 }
-
+*/
 bool CCar::IsTurnedOn()
 {
 	if (!m_isEngine)
@@ -65,6 +63,7 @@ bool CCar::TurnOffEngine()
 	}
 	if (m_speed == 0 && m_gear == 0)
 	{
+		m_isEngine = false;
 		return true;
 	}
 	cout << "To turn off the engine reduce your speed to 0 and switch the transmission in neutral" << endl;
@@ -161,6 +160,7 @@ bool CCar::SetSpeed(int speed)
 	{
 		if (speed > m_speed)
 		{
+			std::cout << "Increase speed to zero transmission is impossible\n";
 			return false;
 		}
 		m_speed = speed;
@@ -180,6 +180,10 @@ void CCar::Info()
 	if (m_isEngine)
 	{
 		cout << "Engine is turn on.\n";
+	}
+	else
+	{
+		cout << "Engine is turn off.\n";
 	}
 	cout << "Car has the " << m_speed << " speed\n";
 	cout << "Car has the " << m_gear << " gear\n";

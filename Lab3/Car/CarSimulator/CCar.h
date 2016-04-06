@@ -17,9 +17,8 @@ public:
 	bool IsTurnedOn();
 	int GetSpeed();
 	int GetGear();
-
-private:
 	void Info();
+private:
 	void GetState();
 	enum { MOVE_BACK, MOVE_FORWARD, STAND} m_state;
 	bool m_isEngine = false;
