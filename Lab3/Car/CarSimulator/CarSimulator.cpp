@@ -22,13 +22,10 @@ void Help()
 int main()
 {
 	CCar car;
-	std::string string;
-	int argument;
 	Help();
 	while (!std::cin.eof() && !std::cin.fail())
 	{
-		std::cout << "> ";
-
+		std::cout << ">> ";
 		std::cout << "Please enter command\n";
 		std::string command;
 		std::vector<std::string> instructions;
