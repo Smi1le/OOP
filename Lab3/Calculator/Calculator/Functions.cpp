@@ -14,12 +14,8 @@ float CFunctions::GetValue(std::string const &var)
 
 bool CFunctions::IsNumber(std::string const &val)
 {
-	for (auto elem : val)
-	{
-		int number = static_cast<int>(elem) - 48;
-		if (elem == '.') {}
-		else if (number >= 0 && number <= 9) {}
-		else
+	for (auto elem : val) {
+		if (!isdigit(elem) && elem != '.')
 		{
 			return false;
 		}
@@ -31,7 +27,6 @@ bool CFunctions::AddVariable(std::string const & var, float val)
 {
 	if (!m_dictionaryVariables.empty() && m_dictionaryVariables.find(var) != m_dictionaryVariables.end())
 	{
-		std::cout << "Such a variable already exists.\n";
 		return false;
 	}
 	m_dictionaryVariables.insert(std::pair<string, float>(var, (round(val * 100) / 100)));
@@ -83,7 +78,7 @@ bool CFunctions::Print(std::string const &var)
 	return false;
 }
 
-bool CFunctions::PrintAllVars()
+bool CFunctions::PrintAllVars() const
 {
 	if (m_dictionaryVariables.empty())
 	{
@@ -146,7 +141,7 @@ bool CFunctions::AbilGetVal(std::string const &var, float &number)
 	return false;
 }
 
-float CFunctions::CalcValTwoVar(std::string const operation, float firstVal, float secondVal)
+float CFunctions::CalcValTwoVar(std::string const operation, float firstVal, float secondVal) const
 {
 	if (operation == "*")
 	{
@@ -185,11 +180,6 @@ float CFunctions::GetValFunc(std::string const &name)
 		return result;
 	}
 	return NAN;
-}
-
-bool CFunctions::CheckOperation(std::string const &op)
-{
-	return (op == "*" || op == "/" || op == "-" || op == "+");
 }
 
 bool CFunctions::PrintFunctions()

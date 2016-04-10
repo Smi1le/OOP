@@ -4,7 +4,7 @@
 
 struct CCalcFixture
 {
-	CCalculator func;
+	CFunctions func;
 };
 
 BOOST_FIXTURE_TEST_SUITE(Calculator, CCalcFixture)
@@ -36,6 +36,12 @@ BOOST_AUTO_TEST_CASE(check_the_job_functions)
 	BOOST_CHECK(func.AddFunction({ "fn", "XPlusY", "=", "x", "+", "y" }));
 	BOOST_CHECK(func.AddFunction({ "fn", "XPlusYY", "=", "x", "+", "XPlusY" }));
 	BOOST_CHECK_EQUAL(func.GetValFunc("XPlusYY"), 77.72f);
+}
+
+BOOST_AUTO_TEST_CASE(b_functions)
+{
+	BOOST_CHECK(func.IsNumber("0.2232"));
+	BOOST_CHECK(!func.IsNumber("0.2232aa"));
 }
 
 
