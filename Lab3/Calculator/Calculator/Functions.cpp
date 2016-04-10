@@ -2,34 +2,17 @@
 #include "Functions.h"
 #include <string>
 #include <iostream>
-#include <boost\algorithm\string.hpp>
-#include <boost/algorithm/string/split.hpp>
 #include <cmath>
 
 using namespace std;
 
-void CCalculator::SetCommand()
-{
-	string command;
-	do
-	{
-		cout << ">> ";
-		getline(cin, command);
-		vector<string> instructions;
-		boost::split(instructions, command, boost::is_any_of(" "));
-		CommandDefinition(instructions);
-	} while (!std::cin.eof() && !std::cin.fail());
-
-
-}
-
-float CCalculator::GetValue(std::string const &var)
+float CFunctions::GetValue(std::string const &var)
 {
 	auto element = *m_dictionaryVariables.find(var);
 	return element.second;
 }
 
-bool CCalculator::IsNumber(std::string const &val)
+bool CFunctions::IsNumber(std::string const &val)
 {
 	for (auto elem : val)
 	{
@@ -44,50 +27,7 @@ bool CCalculator::IsNumber(std::string const &val)
 	return true;
 }
 
-void CCalculator::CommandDefinition(Vector const & inst)
-{
-	if (inst[0] == PRINT_VARS)
-	{
-		PrintAllVars();
-	}
-	else if (inst[0] == PRINT_FNS)
-	{
-		PrintFunctions();
-	}
-	else if (inst.size() < 2)
-	{
-		std::cout << "An incorrect number of data" << endl;
-	}
-	if (inst[0] == ADD_VAR)
-	{
-		std::cout << "ADD_VAR" << std::endl;
-		AddVariable(inst[1]);
-	}
-	else if (inst[0] == ASS_VALUES_TO_VAR)
-	{
-		std::cout << "ASS_VALUES_TO_VAR" << std::endl;
-
-		if (IsNumber(inst[3]))
-		{
-			AssValToVar(inst[1], atof(inst[3].c_str()));
-		}
-		else 
-		{
-			AssValToVar(inst[1], inst[3]);
-		}
-	}
-	else if (inst[0] == ADD_FUNCTION)
-	{
-		AddFunction(inst);
-	}
-	else if (inst[0] == PRINT)
-	{
-		std::cout << "Print var" << std::endl;
-		PrintVar(inst[1]);
-	}
-}
-
-bool CCalculator::AddVariable(std::string const & var, float val)
+bool CFunctions::AddVariable(std::string const & var, float val)
 {
 	if (!m_dictionaryVariables.empty() && m_dictionaryVariables.find(var) != m_dictionaryVariables.end())
 	{
@@ -98,7 +38,7 @@ bool CCalculator::AddVariable(std::string const & var, float val)
 	return true;
 }
 
-bool CCalculator::AssValToVar(std::string const & var1, float val)
+bool CFunctions::AssValToVar(std::string const & var1, float val)
 {
 	if (!m_dictionaryVariables.empty() && m_dictionaryVariables.find(var1) != m_dictionaryVariables.end())
 	{
@@ -108,12 +48,11 @@ bool CCalculator::AssValToVar(std::string const & var1, float val)
 	return AddVariable(var1, val);
 }
 
-bool CCalculator::AssValToVar(std::string const & var1, std::string const & var2)
+bool CFunctions::AssValToVar(std::string const & var1, std::string const & var2)
 {
 	auto element = m_dictionaryVariables.find(var2);
 	if (element == m_dictionaryVariables.end())
 	{
-		std::cout << "Error! The second variable is not declared!" << std::endl;
 		return false;
 	}
 	if (m_dictionaryVariables.find(var1) != m_dictionaryVariables.end())
@@ -124,12 +63,13 @@ bool CCalculator::AssValToVar(std::string const & var1, std::string const & var2
 	return AddVariable(var1, element->second);
 }
 
-void CCalculator::PrintVar(std::string const &var)
+bool CFunctions::Print(std::string const &var)
 {
 	auto outElem = m_dictionaryVariables.find(var);
 	if (outElem != m_dictionaryVariables.end())
 	{
 		std::cout << outElem->second << endl;
+		return true;
 	}
 	else
 	{
@@ -137,24 +77,31 @@ void CCalculator::PrintVar(std::string const &var)
 		if (outElem1 != m_dataFunctions.end())
 		{
 			std::cout << (*outElem1).first << ":" << GetValFunc((*outElem1).first) << std::endl;
+			return true;
 		}
 	}
+	return false;
 }
 
-void CCalculator::PrintAllVars()
+bool CFunctions::PrintAllVars()
 {
+	if (m_dictionaryVariables.empty())
+	{
+		return false;
+	}
 	for (auto elem : m_dictionaryVariables)
 	{
 		cout << elem.first << ":" << elem.second << endl;
 	}
+	return true;
 }
 
-bool CCalculator::AddFunction(Vector const &inst)
+bool CFunctions::AddFunction(Vector const &inst)
 {
 	std::string nameFunc = inst[1];
 	if (!m_dataFunctions.empty() && m_dataFunctions.find(nameFunc) != m_dataFunctions.end())
 	{
-		std::cout << "Function with the same name was announced earlier" << std::endl;
+		//std::cout << "Function with the same name was announced earlier" << std::endl;
 		return false;
 	}
 	vector<string> data;
@@ -171,7 +118,7 @@ bool CCalculator::AddFunction(Vector const &inst)
 	return true;
 }
 
-bool CCalculator::GetVal(std::string const &var, float &number)
+bool CFunctions::AbilGetVal(std::string const &var, float &number)
 {
 	if (!m_dictionaryVariables.empty())
 	{
@@ -188,10 +135,10 @@ bool CCalculator::GetVal(std::string const &var, float &number)
 		if (element != m_dataFunctions.end())
 		{
 			auto number1 = (*element).second;
-			GetVal(number1[0], number);
+			AbilGetVal(number1[0], number);
 			if (number1.size() > 1)
 			{
-				GetVal(number1[2], number);
+				AbilGetVal(number1[2], number);
 			}
 			return true;
 		}
@@ -199,7 +146,7 @@ bool CCalculator::GetVal(std::string const &var, float &number)
 	return false;
 }
 
-float CCalculator::CalcVal(std::string const operation, float firstVal, float secondVal)
+float CFunctions::CalcValTwoVar(std::string const operation, float firstVal, float secondVal)
 {
 	if (operation == "*")
 	{
@@ -213,13 +160,10 @@ float CCalculator::CalcVal(std::string const operation, float firstVal, float se
 	{
 		return firstVal + secondVal;
 	}
-	if (operation == "/")
-	{
-		return firstVal / secondVal;
-	}
+	return firstVal / secondVal;
 }
 
-float CCalculator::GetValFunc(std::string const &name)
+float CFunctions::GetValFunc(std::string const &name)
 {
 	auto pair = *m_dataFunctions.find(name);
 	auto data = pair.second;
@@ -232,25 +176,31 @@ float CCalculator::GetValFunc(std::string const &name)
 		secondName = data[NUMBER_POS_SEC_NAME - 3];
 		float valFirstVar = 0;
 		float valSecondVar = 0;
-		GetVal(firstName, valFirstVar);
-		GetVal(secondName, valSecondVar);
-		return CalcVal(operation, valFirstVar, valSecondVar);
+		AbilGetVal(firstName, valFirstVar);
+		AbilGetVal(secondName, valSecondVar);
+		return CalcValTwoVar(operation, valFirstVar, valSecondVar);
 	}
-	if (GetVal(firstName, result))
+	if (AbilGetVal(firstName, result))
 	{
 		return result;
 	}
+	return NAN;
 }
 
+bool CFunctions::CheckOperation(std::string const &op)
+{
+	return (op == "*" || op == "/" || op == "-" || op == "+");
+}
 
-void CCalculator::PrintFunctions()
+bool CFunctions::PrintFunctions()
 {
 	if (m_dataFunctions.empty())
 	{
-		std::cout << "You not initialized not a one function" << std::endl;//TODO: криво написал, переписать на нормальный англ язык
+		return false;
 	}
 	for (auto elem : m_dataFunctions)
 	{
 		std::cout << elem.first << ":" << GetValFunc(elem.first) << std::endl;
 	}
+	return true;
 }

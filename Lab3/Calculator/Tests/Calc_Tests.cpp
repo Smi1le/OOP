@@ -4,7 +4,7 @@
 
 struct CCalcFixture
 {
-	CFunctions func;
+	CCalculator func;
 };
 
 BOOST_FIXTURE_TEST_SUITE(Calculator, CCalcFixture)

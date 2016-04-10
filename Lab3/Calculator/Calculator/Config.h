@@ -7,6 +7,8 @@ static const std::string ADD_FUNCTION = "fn";
 static const std::string PRINT = "print";
 static const std::string PRINT_VARS = "printvars";
 static const std::string PRINT_FNS = "printfns";
+static const std::string EXIT = "...";
+static const std::string HELP = "Help";
 
 static const int NUMBER_POS_FIRST_NAME = 3;
 static const int NUMBER_POS_OPER = 4;

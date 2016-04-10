@@ -8,24 +8,24 @@ using dataFunctions = std::map<std::string, std::vector<std::string>>;
 using dataOneFunction = std::pair<std::string, std::vector<std::string>>;
 using Vector = std::vector<std::string>;
 
-class CCalculator
+class CFunctions
 {
 public:
-	void SetCommand();
-	void CommandDefinition(Vector const & inst);
+	float GetValue(std::string const &var);
+protected:
 	bool AddVariable(std::string const & var, float val = NAN);
+	bool AddFunction(Vector const &inst);
 	bool AssValToVar(std::string const & var1, std::string const & var2);
 	bool AssValToVar(std::string const & var1, float val);
-	bool AddFunction(Vector const &inst);
-	float GetValue(std::string const &var);
 	float GetValFunc(std::string const &name);
-	float CalcVal(std::string const operation, float firstVal, float secondVal);
-private:
+	float CalcValTwoVar(std::string const operation, float firstVal, float secondVal);
 	bool IsNumber(std::string const &val);
-	bool GetVal(std::string const &var, float &number);
-	void PrintVar(std::string const &var);
-	void PrintAllVars();
-	void PrintFunctions();
+	bool AbilGetVal(std::string const &var, float &number);
+	bool Print(std::string const &var);
+	bool PrintAllVars();
+	bool PrintFunctions();
+private:
+	bool CheckOperation(std::string const &op);
 	Vars m_dictionaryVariables;
 	dataFunctions m_dataFunctions;
 };
