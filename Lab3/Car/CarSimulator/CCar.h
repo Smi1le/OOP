@@ -9,7 +9,6 @@ class CCar
 public:
 	CCar() = default;
 	~CCar() = default;
-	bool SetCommand();
 	bool TurnOnEngine();
 	bool TurnOffEngine();
 	bool SetGear(int gear);
@@ -17,9 +16,9 @@ public:
 	bool IsTurnedOn();
 	int GetSpeed();
 	int GetGear();
-	void Info();
+	int GetStatus();
 private:
-	void GetState();
+	void UpdateStatus();
 	enum { MOVE_BACK, MOVE_FORWARD, STAND} m_state;
 	bool m_isEngine = false;
 	bool m_moveBack = false;

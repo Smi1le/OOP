@@ -2,11 +2,8 @@
 //
 
 #include "stdafx.h"
-#include "CCar.h"
+#include "Interface.h"
 #include <iostream>
-#include <iterator>
-#include <boost/algorithm/string.hpp>
-#include <boost/algorithm/string/split.hpp>
 
 
 void Help()
@@ -21,51 +18,9 @@ void Help()
 
 int main()
 {
-	CCar car;
 	Help();
-	while (!std::cin.eof() && !std::cin.fail())
-	{
-		std::cout << ">> ";
-		std::cout << "Please enter command\n";
-		std::string command;
-		std::vector<std::string> instructions;
-		std::getline(std::cin, command);
-		boost::split(instructions, command, boost::is_any_of(" "));
-		if (instructions[0] == "")
-		{
-			std::cout << "GoodBay " << std::endl;
-			return false;
-		}
-		if (instructions[0] == "Info")
-		{
-			car.Info();
-		}
-		else if (instructions[0] == "EngineOn")
-		{
-			car.TurnOnEngine();
-		}
-		else if (instructions[0] == "EngineOff")
-		{
-			car.TurnOffEngine();
-		}
-		else if (instructions[0] == "SetGear")
-		{
-			car.SetGear(atoi(instructions[1].c_str()));
-		}
-		else if (instructions[0] == "SetSpeed")
-		{
-			car.SetSpeed(atoi(instructions[1].c_str()));
-		}
-		else if (instructions[0] == "Help")
-		{
-			Help();
-		}
-		else
-		{
-			std::cout << "Invalid command!" << std::endl;
-		}
-	}
-
+	CInterface inter;
+	while (inter.SetCommand()) { }
     return 0;
 }
 
