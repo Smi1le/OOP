@@ -7,7 +7,7 @@
 
 using namespace std;
 
-bool CCar::IsTurnedOn()
+bool CCar::IsTurnedOn() const
 {
 	if (!m_isEngine)
 	{
@@ -24,6 +24,7 @@ bool CCar::TurnOffEngine()
 	}
 	if (m_speed == 0 && m_gear == 0)
 	{
+		m_isEngine = false;
 		return true;
 	}
 	return false;
@@ -148,12 +149,12 @@ bool CCar::SetSpeed(int speed)
 	return false;
 }
 
-int CCar::GetSpeed()
+int CCar::GetSpeed() const
 {
 	return m_speed;
 }
 
-int CCar::GetGear()
+int CCar::GetGear() const
 {
 	return m_gear;
 }

@@ -63,7 +63,7 @@ bool CInterface::SetCommand()
 	return true;
 }
 
-void CInterface::Info()
+void CInterface::Info() const
 {
 	if (m_car->IsTurnedOn())
 	{
@@ -89,7 +89,7 @@ void CInterface::Info()
 	}
 }
 
-void CInterface::Help()
+void CInterface::Help() const
 {
 	std::cout << "Machine control commands: " << std::endl;
 	std::cout << "EngineOn - engine starts" << std::endl;

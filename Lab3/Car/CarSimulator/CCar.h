@@ -13,9 +13,9 @@ public:
 	bool TurnOffEngine();
 	bool SetGear(int gear);
 	bool SetSpeed(int speed);
-	bool IsTurnedOn();
-	int GetSpeed();
-	int GetGear();
+	bool IsTurnedOn() const;
+	int GetSpeed() const;
+	int GetGear() const;
 	int GetStatus();
 private:
 	void UpdateStatus();
