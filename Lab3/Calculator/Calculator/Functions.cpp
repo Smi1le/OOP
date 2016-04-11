@@ -6,12 +6,6 @@
 
 using namespace std;
 
-float CFunctions::GetValue(std::string const &var)
-{
-	auto element = *m_dictionaryVariables.find(var);
-	return element.second;
-}
-
 bool CFunctions::IsNumber(std::string const &val)
 {
 	for (auto elem : val) {
@@ -23,17 +17,17 @@ bool CFunctions::IsNumber(std::string const &val)
 	return true;
 }
 
-bool CFunctions::AddVariable(std::string const & var, float val)
+bool CFunctions::AddVariable(std::string const & var, double val)
 {
 	if (!m_dictionaryVariables.empty() && m_dictionaryVariables.find(var) != m_dictionaryVariables.end())
 	{
 		return false;
 	}
-	m_dictionaryVariables.insert(std::pair<string, float>(var, (round(val * 100) / 100)));
+	m_dictionaryVariables.insert(std::pair<string, double>(var, (round(val * 100) / 100)));
 	return true;
 }
 
-bool CFunctions::AssValToVar(std::string const & var1, float val)
+bool CFunctions::AssValToVar(std::string const & var1, double val)
 {
 	if (!m_dictionaryVariables.empty() && m_dictionaryVariables.find(var1) != m_dictionaryVariables.end())
 	{
@@ -58,39 +52,6 @@ bool CFunctions::AssValToVar(std::string const & var1, std::string const & var2)
 	return AddVariable(var1, element->second);
 }
 
-bool CFunctions::Print(std::string const &var)
-{
-	auto outElem = m_dictionaryVariables.find(var);
-	if (outElem != m_dictionaryVariables.end())
-	{
-		std::cout << outElem->second << endl;
-		return true;
-	}
-	else
-	{
-		auto outElem1 = m_dataFunctions.find(var);
-		if (outElem1 != m_dataFunctions.end())
-		{
-			std::cout << (*outElem1).first << ":" << GetValFunc((*outElem1).first) << std::endl;
-			return true;
-		}
-	}
-	return false;
-}
-
-bool CFunctions::PrintAllVars() const
-{
-	if (m_dictionaryVariables.empty())
-	{
-		return false;
-	}
-	for (auto elem : m_dictionaryVariables)
-	{
-		cout << elem.first << ":" << elem.second << endl;
-	}
-	return true;
-}
-
 bool CFunctions::AddFunction(Vector const &inst)
 {
 	std::string nameFunc = inst[1];
@@ -113,7 +74,7 @@ bool CFunctions::AddFunction(Vector const &inst)
 	return true;
 }
 
-bool CFunctions::AbilGetVal(std::string const &var, float &number)
+bool CFunctions::AbilGetVal(std::string const &var, double &number)
 {
 	if (!m_dictionaryVariables.empty())
 	{
@@ -141,7 +102,7 @@ bool CFunctions::AbilGetVal(std::string const &var, float &number)
 	return false;
 }
 
-float CFunctions::CalcValTwoVar(std::string const operation, float firstVal, float secondVal) const
+double CFunctions::CalcValTwoVar(std::string const operation, double firstVal, double secondVal) const
 {
 	if (operation == "*")
 	{
@@ -158,19 +119,19 @@ float CFunctions::CalcValTwoVar(std::string const operation, float firstVal, flo
 	return firstVal / secondVal;
 }
 
-float CFunctions::GetValFunc(std::string const &name)
+double CFunctions::GetValFunc(std::string const &name)
 {
 	auto pair = *m_dataFunctions.find(name);
 	auto data = pair.second;
 	std::string firstName = data[NUMBER_POS_FIRST_NAME - 3];
 	std::string operation, secondName;
-	float result = 0;
+	double result = 0;
 	if (data.size() > 1)
 	{
 		operation = data[NUMBER_POS_OPER - 3];
 		secondName = data[NUMBER_POS_SEC_NAME - 3];
-		float valFirstVar = 0;
-		float valSecondVar = 0;
+		double valFirstVar = 0;
+		double valSecondVar = 0;
 		AbilGetVal(firstName, valFirstVar);
 		AbilGetVal(secondName, valSecondVar);
 		return CalcValTwoVar(operation, valFirstVar, valSecondVar);
@@ -180,17 +141,4 @@ float CFunctions::GetValFunc(std::string const &name)
 		return result;
 	}
 	return NAN;
-}
-
-bool CFunctions::PrintFunctions()
-{
-	if (m_dataFunctions.empty())
-	{
-		return false;
-	}
-	for (auto elem : m_dataFunctions)
-	{
-		std::cout << elem.first << ":" << GetValFunc(elem.first) << std::endl;
-	}
-	return true;
 }
