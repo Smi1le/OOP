@@ -7,8 +7,8 @@ using scope = std::vector<std::pair<int, int>>;
 class CCar
 {
 public:
-	CCar() = default;
-	~CCar() = default;
+	CCar();
+
 	bool TurnOnEngine();
 	bool TurnOffEngine();
 	bool SetGear(int gear);
@@ -16,19 +16,14 @@ public:
 	bool IsTurnedOn() const;
 	int GetSpeed() const;
 	int GetGear() const;
-	int GetStatus();
+	int GetStatus()const;
 private:
-	void UpdateStatus();
-	enum { MOVE_BACK, MOVE_FORWARD, STAND} m_state;
-	bool m_isEngine = false;
-	bool m_moveBack = false;
-	int m_speed = 0;
-	int m_gear = 0;
-	scope m_restrictions = { {0, 20},
-							 {INT_MIN, INT_MAX},
-							 {0, 30},
-							 {20, 50},
-							 {30, 60},
-							 {40, 90},
-							 {50, 150} };
+	enum State { MOVE_BACK, MOVE_FORWARD, STAND };
+
+	State UpdateStatus()const;
+	bool m_isEngine;
+	bool m_moveBack;
+	int m_speed;
+	int m_gear;
+	scope m_restrictions;
 };

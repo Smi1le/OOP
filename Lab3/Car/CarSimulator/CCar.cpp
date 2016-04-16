@@ -7,6 +7,20 @@
 
 using namespace std;
 
+CCar::CCar()
+	: m_speed(0)
+	, m_gear(0)
+	, m_isEngine(false)
+	, m_moveBack(false)
+	, m_restrictions({ { 0, 20 },
+						{ INT_MIN, INT_MAX },
+						{ 0, 30 },
+						{ 20, 50 },
+						{ 30, 60 },
+						{ 40, 90 },
+						{ 50, 150 } })
+{}
+
 bool CCar::IsTurnedOn() const
 {
 	if (!m_isEngine)
@@ -18,11 +32,7 @@ bool CCar::IsTurnedOn() const
 
 bool CCar::TurnOffEngine()
 {
-	if (!m_isEngine)
-	{
-		return false;
-	}
-	if (m_speed == 0 && m_gear == 0)
+	if (m_isEngine && m_speed == 0 && m_gear == 0)
 	{
 		m_isEngine = false;
 		return true;
@@ -43,40 +53,40 @@ bool CCar::TurnOnEngine()
 }
 
 
-void CCar::UpdateStatus()
+CCar::State CCar::UpdateStatus()const
 {
 	if (m_speed == 0)
 	{
-		m_state = STAND;
+		return State::STAND;
 	}
 	if (m_speed != 0)
 	{
 		if (m_moveBack)
 		{
-			m_state = MOVE_BACK;
+			return State::MOVE_BACK;
 		}
 		else
 		{
-			m_state = MOVE_FORWARD;
+			return State::MOVE_FORWARD;
 		}
 	}
 }
 
-int CCar::GetStatus()
+int CCar::GetStatus() const
 {
-	UpdateStatus();
-	if (m_state == MOVE_BACK)
+	auto state = UpdateStatus();
+	if (state == MOVE_BACK)
 	{
 		return -1;
 	}
-	else if (m_state == MOVE_FORWARD)
+	else if (state == MOVE_FORWARD)
 	{
 		return 1;
 	}
 	return 0;
 }
 
-
+#pragma message TODO: Refactor me!
 bool CCar::SetGear(int gear)
 {
 	if (gear < -1 || gear > 5)
@@ -114,6 +124,11 @@ bool CCar::SetGear(int gear)
 		return true;
 	}
 
+#pragma message !!
+	auto fn = [this](int speed, int gear) {
+		return speed >= m_restrictions[gear + 1].first && speed <= m_restrictions[gear + 1].second;
+	};
+
 	if (gear > 0 && (m_speed >= m_restrictions[gear + 1].first && m_speed <= m_restrictions[gear + 1].second) && !m_moveBack)
 	{
 		m_gear = gear;
@@ -134,7 +149,6 @@ bool CCar::SetSpeed(int speed)
 		{
 			if (speed > m_speed)
 			{
-				cout << "----------------------" << endl;
 				return false;
 			}
 			m_speed = speed;

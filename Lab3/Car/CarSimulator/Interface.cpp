@@ -16,40 +16,41 @@ bool CInterface::SetCommand()
 	vector<string> instructions;
 	getline(cin, command);
 	boost::split(instructions, command, boost::is_any_of(" "));
-	if (instructions[0] == "EXIT")
+	string nameCommand = instructions[0];
+	if (nameCommand == "EXIT")
 	{
 		return false;
 	}
-	if (instructions[0] == "Help")
+	if (nameCommand == "Help")
 	{
 		Help();
 	}
-	if (instructions[0] == "Info")
+	if (nameCommand == "Info")
 	{
 		Info();
 	}
-	else if (instructions[0] == "EngineOn")
+	else if (nameCommand == "EngineOn")
 	{
 		if (!m_car->TurnOnEngine())
 		{
 			std::cout << "It is impossible to start the engine" << std::endl;
 		}
 	}
-	else if (instructions[0] == "EngineOff")
+	else if (nameCommand == "EngineOff")
 	{
 		if (!m_car->TurnOffEngine())
 		{
 			std::cout << "It is impossible to turn off the engine" << std::endl;
 		}
 	}
-	else if (instructions[0] == "SetGear")
+	else if (nameCommand == "SetGear")
 	{
 		if (!m_car->SetGear(atoi(instructions[1].c_str())))
 		{
 			std::cout << "It is impossible to shift gears" << std::endl;
 		}
 	}
-	else if (instructions[0] == "SetSpeed")
+	else if (nameCommand == "SetSpeed")
 	{
 		if (!m_car->SetSpeed(atoi(instructions[1].c_str())))
 		{
@@ -75,15 +76,16 @@ void CInterface::Info() const
 	}
 	cout << "Car has the " << m_car->GetSpeed() << " speed\n";
 	cout << "Car has the " << m_car->GetGear() << " gear\n";
-	if (m_car->GetStatus() == -1)
+	int ValStatus = m_car->GetStatus();
+	if (ValStatus == -1)
 	{
 		cout << "Car moves backwards.\n";
 	}
-	else if (m_car->GetStatus() == 0)
+	else if (ValStatus == 0)
 	{
 		cout << "The car is stationary.\n";
 	}
-	else if (m_car->GetStatus() == 1)
+	else if (ValStatus == 1)
 	{
 		cout << "Car moves forward.\n";
 	}
