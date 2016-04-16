@@ -9,7 +9,7 @@
 
 int main()
 {
-	CICalculator calc;
+	CCalculatorHelper calc;
 	calc.SetCommand();
     return 0;
 }

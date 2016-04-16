@@ -170,11 +170,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Calculator\Functions.h" />
+    <ClInclude Include="..\Calculator\ICalculator.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Calculator\Functions.cpp" />
+    <ClCompile Include="..\Calculator\ICalculator.cpp" />
     <ClCompile Include="Calc_Tests.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

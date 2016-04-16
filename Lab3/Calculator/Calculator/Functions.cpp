@@ -6,32 +6,26 @@
 
 using namespace std;
 
-bool CFunctions::IsNumber(std::string const &val)
+CFunctions::CFunctions(std::shared_ptr<DataProgram> tData)
 {
-	for (auto elem : val) {
-		if (!isdigit(elem) && elem != '.')
-		{
-			return false;
-		}
-	}
-	return true;
+	m_data = tData;
 }
 
 bool CFunctions::AddVariable(std::string const & var, double val)
 {
-	if (!m_dictionaryVariables.empty() && m_dictionaryVariables.find(var) != m_dictionaryVariables.end())
+	if (!m_data->m_dataVariables.empty() && m_data->m_dataVariables.find(var) != m_data->m_dataVariables.end())
 	{
 		return false;
 	}
-	m_dictionaryVariables.insert(std::pair<string, double>(var, (round(val * 100) / 100)));
+	m_data->m_dataVariables.insert(std::pair<std::string, double>(var, (std::round(val * 100) / 100)));
 	return true;
 }
 
 bool CFunctions::AssValToVar(std::string const & var1, double val)
 {
-	if (!m_dictionaryVariables.empty() && m_dictionaryVariables.find(var1) != m_dictionaryVariables.end())
+	if (!m_data->m_dataVariables.empty() && m_data->m_dataVariables.find(var1) != m_data->m_dataVariables.end())
 	{
-		m_dictionaryVariables.at(var1) = round(val * 100) / 100;
+		m_data->m_dataVariables.at(var1) = round(val * 100) / 100;
 		return true;
 	}
 	return AddVariable(var1, val);
@@ -39,14 +33,15 @@ bool CFunctions::AssValToVar(std::string const & var1, double val)
 
 bool CFunctions::AssValToVar(std::string const & var1, std::string const & var2)
 {
-	auto element = m_dictionaryVariables.find(var2);
-	if (element == m_dictionaryVariables.end())
+	
+	auto element = m_data->m_dataVariables.find(var2);
+	if (element == m_data->m_dataVariables.end())
 	{
 		return false;
 	}
-	if (m_dictionaryVariables.find(var1) != m_dictionaryVariables.end())
+	if (m_data->m_dataVariables.find(var1) != m_data->m_dataVariables.end())
 	{
-		m_dictionaryVariables.at(var1) = element->second;
+		m_data->m_dataVariables.at(var1) = element->second;
 		return true;
 	}
 	return AddVariable(var1, element->second);
@@ -55,90 +50,21 @@ bool CFunctions::AssValToVar(std::string const & var1, std::string const & var2)
 bool CFunctions::AddFunction(Vector const &inst)
 {
 	std::string nameFunc = inst[1];
-	if (!m_dataFunctions.empty() && m_dataFunctions.find(nameFunc) != m_dataFunctions.end())
+	if (!m_data->m_dataFunctions.empty() && m_data->m_dataFunctions.find(nameFunc) != m_data->m_dataFunctions.end())
 	{
-		//std::cout << "Function with the same name was announced earlier" << std::endl;
 		return false;
 	}
-	vector<string> data;
+	DataFunction pData;
 	std::string firstName = inst[NUMBER_POS_FIRST_NAME];
-	data.push_back(firstName);
+	pData.firstVar = firstName;
 	if (inst.size() > 4)
 	{
 		std::string operation = inst[NUMBER_POS_OPER];
 		std::string secondName = inst[NUMBER_POS_SEC_NAME];
-		data.push_back(operation);
-		data.push_back(secondName);
+		pData.operand = operation;
+		pData.secondVar = secondName;
+		pData.isTwoOperand = true;
 	}
-	m_dataFunctions.insert(dataOneFunction(nameFunc, data));
+	m_data->m_dataFunctions.insert({ nameFunc, pData });
 	return true;
-}
-
-bool CFunctions::AbilGetVal(std::string const &var, double &number)
-{
-	if (!m_dictionaryVariables.empty())
-	{
-		auto element = m_dictionaryVariables.find(var);
-		if (element != m_dictionaryVariables.end())
-		{
-			number += (*element).second;
-			return true;
-		}
-	}
-	if (!m_dataFunctions.empty())
-	{
-		auto element = m_dataFunctions.find(var);
-		if (element != m_dataFunctions.end())
-		{
-			auto number1 = (*element).second;
-			AbilGetVal(number1[0], number);
-			if (number1.size() > 1)
-			{
-				AbilGetVal(number1[2], number);
-			}
-			return true;
-		}
-	}
-	return false;
-}
-
-double CFunctions::CalcValTwoVar(std::string const operation, double firstVal, double secondVal) const
-{
-	if (operation == "*")
-	{
-		return firstVal * secondVal;
-	}
-	if (operation == "-")
-	{
-		return firstVal - secondVal;
-	}
-	if (operation == "+")
-	{
-		return firstVal + secondVal;
-	}
-	return firstVal / secondVal;
-}
-
-double CFunctions::GetValFunc(std::string const &name)
-{
-	auto pair = *m_dataFunctions.find(name);
-	auto data = pair.second;
-	std::string firstName = data[NUMBER_POS_FIRST_NAME - 3];
-	std::string operation, secondName;
-	double result = 0;
-	if (data.size() > 1)
-	{
-		operation = data[NUMBER_POS_OPER - 3];
-		secondName = data[NUMBER_POS_SEC_NAME - 3];
-		double valFirstVar = 0;
-		double valSecondVar = 0;
-		AbilGetVal(firstName, valFirstVar);
-		AbilGetVal(secondName, valSecondVar);
-		return CalcValTwoVar(operation, valFirstVar, valSecondVar);
-	}
-	if (AbilGetVal(firstName, result))
-	{
-		return result;
-	}
-	return NAN;
 }

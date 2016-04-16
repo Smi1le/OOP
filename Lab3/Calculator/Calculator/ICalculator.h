@@ -1,17 +1,22 @@
 #pragma once
 #include "Functions.h"
+#include "OutputData.h"
+#include "CalculateData.h"
+#include <memory>
 
-class CICalculator : public CFunctions
+class CCalculatorHelper
 {
 public:
+	CCalculatorHelper();
 	void SetCommand();
-private:
 	double GetValue(std::string const &var);
-	void Help();
-	bool CorrectInput(Vector const &instructions);
-	bool Print(std::string const &var);
-	bool PrintAllVars() const;
+	void Help() const;
+	bool CorrectInput(Vector const &instructions) const;
+	bool IsNumber(std::string const &val) const;
 	bool IsOperation(std::string const &op) const;
-	bool PrintFunctions();
 	bool ParsingInputCommands(std::string const & inst);
+private:
+	std::shared_ptr<CFunctions> m_functions;
+	std::shared_ptr<COutputData> m_outputData;
+	std::shared_ptr<DataProgram> m_data;
 };
