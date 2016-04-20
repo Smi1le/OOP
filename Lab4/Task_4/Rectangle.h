@@ -16,13 +16,15 @@ public:
 	~CRectangle() = default;
 	point GetPointUpLeftAngle() const;
 	std::string GetColorLine() const override;
-	std::string ToString()const override;
+	std::string GetDescription()const override;
 	std::string GetColor() const override;
 	float GetPerimeterShape() const override;
 	float GetAreaShape() const override;
+	std::string GetNameShape() const override;
 	float GetHeight() const;
 	float GetWidth() const;
 private:
+	
 	std::shared_ptr<CPoint> m_firstPoint;
 	std::shared_ptr<CPoint> m_secondPoint;
 	std::string m_edgeColor;

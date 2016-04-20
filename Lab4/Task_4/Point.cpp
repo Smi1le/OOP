@@ -6,7 +6,7 @@ point CPoint::GetCoordinates() const
 	return m_point;
 }
 
-std::string CPoint::ToString() const
+std::string CPoint::GetDescription() const
 {
 	return "Point <" + std::to_string(m_point.first) + ", " + std::to_string(m_point.second) + ">";
 }
@@ -24,4 +24,9 @@ float CPoint::GetPerimeterShape() const
 std::string CPoint::GetColorLine() const
 {
 	return "Red";
+}
+
+std::string CPoint::GetNameShape() const
+{
+	return "point";
 }

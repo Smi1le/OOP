@@ -12,10 +12,13 @@ public:
 	{}
 	~CLineSegment() = default;
 	float GetLengthSegment() const;
+	point GetPointUpLeftAngle() const;
+	float GetAngle() const;
 	float GetPerimeterShape() const override;
 	float GetAreaShape() const override;
 	std::string GetColorLine() const override;
-	std::string ToString() const override;
+	std::string GetDescription() const override;
+	std::string GetNameShape() const override;
 private:
 	std::shared_ptr<CPoint> m_firstPoint;
 	std::shared_ptr<CPoint> m_secondPoint;

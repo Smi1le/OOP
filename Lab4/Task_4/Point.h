@@ -11,7 +11,8 @@ public:
 	float GetAreaShape() const override;
 	float GetPerimeterShape() const override;
 	std::string GetColorLine() const override;
-	std::string ToString() const override;
+	std::string GetDescription() const override;
+	std::string GetNameShape() const override;
 private:
 	point m_point;
 };

@@ -2,7 +2,7 @@
 //
 
 #include "stdafx.h"
-#include "ICalculator.h"
+#include "CCalculatorHelper.h"
 #include <iostream>
 
 

@@ -47,6 +47,23 @@ bool CFunctions::AssValToVar(std::string const & var1, std::string const & var2)
 	return AddVariable(var1, element->second);
 }
 
+TypeOperand CheckOperand(std::string const &op)
+{
+	if (op == "+")
+	{
+		return TypeOperand::addition;
+	}
+	else if (op == "/")
+	{
+		return TypeOperand::division;
+	}
+	else if (op == "*")
+	{
+		return TypeOperand::multiplication;
+	}
+	return TypeOperand::substraction;
+}
+
 bool CFunctions::AddFunction(Vector const &inst)
 {
 	std::string nameFunc = inst[1];
@@ -57,11 +74,12 @@ bool CFunctions::AddFunction(Vector const &inst)
 	DataFunction pData;
 	std::string firstName = inst[NUMBER_POS_FIRST_NAME];
 	pData.firstVar = firstName;
-	if (inst.size() > 4)
+//#pragma message inst.size() > 5?
+	if (inst.size() > 5)
 	{
 		std::string operation = inst[NUMBER_POS_OPER];
 		std::string secondName = inst[NUMBER_POS_SEC_NAME];
-		pData.operand = operation;
+		pData.operand = CheckOperand(operation);
 		pData.secondVar = secondName;
 		pData.isTwoOperand = true;
 	}

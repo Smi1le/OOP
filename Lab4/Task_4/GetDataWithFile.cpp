@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#pragma warning (disable: 4996)
 #include "Config.h"
 #include "GetDataWithFile.h"
 #include <fstream>

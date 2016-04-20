@@ -15,13 +15,12 @@ std::string CRectangle::GetColorLine() const
 
 float CRectangle::GetHeight() const
 {
-	return abs(m_firstPoint->GetCoordinates().second - m_secondPoint->GetCoordinates().second);
-	
+	return abs(m_secondPoint->GetCoordinates().second - m_firstPoint->GetCoordinates().second);
 }
 
 float CRectangle::GetWidth() const
 {
-	return abs(m_firstPoint->GetCoordinates().first - m_secondPoint->GetCoordinates().first);
+	return abs(m_secondPoint->GetCoordinates().first - m_firstPoint->GetCoordinates().first);
 }
 
 float CRectangle::GetPerimeterShape() const
@@ -39,12 +38,14 @@ std::string CRectangle::GetColor() const
 	return m_fillColor;
 }
 
-std::string CRectangle::ToString() const
+std::string CRectangle::GetDescription() const
 {
-	return  "Rectangle <<" + std::to_string(m_firstPoint->GetCoordinates().first) + ", " +
-		std::to_string(m_firstPoint->GetCoordinates().second) + ">, <" +
-		std::to_string(m_secondPoint->GetCoordinates().first) + ", " +
-		std::to_string(m_secondPoint->GetCoordinates().second) + "> " +
-		"S = " + std::to_string(this->GetAreaShape()) + 
-		"P = " + std::to_string(this->GetPerimeterShape());
+	return  "Rectangle <<" + std::to_string(m_firstPoint->GetCoordinates().first) + ", " + std::to_string(m_firstPoint->GetCoordinates().second)
+		+ "><" + std::to_string(m_secondPoint->GetCoordinates().first) + ", " + std::to_string(m_secondPoint->GetCoordinates().second) + 
+		">>, S = " + std::to_string(GetAreaShape()) + ", P = " + std::to_string(GetPerimeterShape());
+}
+
+std::string CRectangle::GetNameShape() const
+{
+	return "rectangle";
 }

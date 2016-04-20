@@ -4,8 +4,7 @@
 #include "LineSegment.h"
 #include "Point.h"
 #include "Rectangle.h"
-#include "Shape.h"
-#include "SolidShape.h"
+#include "Triangle.h"
 #include <memory>
 
 typedef std::vector<std::vector<std::string>> dataShapes;
