@@ -10,10 +10,8 @@
 class CCalculateData
 {
 public:
-	CCalculateData(std::shared_ptr<DataProgram> tData);
-	boost::optional<double> GetValFunction(std::string const &name);
-	double CalcValTwoVar(TypeOperand operation, double firstVal, double secondVal) const;
-	bool AbilGetVal(std::string const &var, double &number);// TODO: don't use abil in names
-private:
-	std::shared_ptr<DataProgram> m_data;
+	CCalculateData();
+	boost::optional<float> GetValFunction(std::string const &name, DataProgram const &data);
+	float CalcValTwoVar(TypeOperand operation, float firstVal, float secondVal) const;
+	bool Calculate(std::string const &var, float &number, DataProgram const &data);// TODO: don't use abil in names
 };

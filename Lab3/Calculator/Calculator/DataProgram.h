@@ -5,7 +5,7 @@
 #include <vector>
 
 
-using dataVariables = std::map<std::string, double>;
+using dataVariables = std::map<std::string, float>;
 using dataFunctions = std::map<std::string, DataFunction>;
 using Vector = std::vector<std::string>;
 

@@ -1,34 +1,33 @@
 #include "stdafx.h"
 #include "CalculateData.h"
 
-CCalculateData::CCalculateData(std::shared_ptr<DataProgram> tData)
+CCalculateData::CCalculateData()
 {
-	m_data = tData;
 }
 
 // TODO:change signature to `double(std::string const &)`
-bool CCalculateData::AbilGetVal(std::string const &var, double &number)
+bool CCalculateData::Calculate(std::string const &var, float &number, DataProgram const &pData)
 {
 
-	if (!m_data->m_dataVariables.empty())
+	if (!pData.m_dataVariables.empty())
 	{
-		auto element = m_data->m_dataVariables.find(var);
-		if (element != m_data->m_dataVariables.end())
+		auto element = pData.m_dataVariables.find(var);
+		if (element != pData.m_dataVariables.end())
 		{
 			number += (*element).second;
 			return true;
 		}
 	}
-	if (!m_data->m_dataFunctions.empty())
+	if (!pData.m_dataFunctions.empty())
 	{
-		auto element = m_data->m_dataFunctions.find(var);
-		if (element != m_data->m_dataFunctions.end())
+		auto element = pData.m_dataFunctions.find(var);
+		if (element != pData.m_dataFunctions.end())
 		{
 			auto number1 = (*element).second;
-			AbilGetVal(number1.firstVar, number);
+			Calculate(number1.firstVar, number, pData);
 			if (number1.isTwoOperand)
 			{
-				AbilGetVal(number1.secondVar, number);
+				Calculate(number1.secondVar, number, pData);
 			}
 			return true;
 		}
@@ -36,17 +35,17 @@ bool CCalculateData::AbilGetVal(std::string const &var, double &number)
 	return false;
 }
 
-boost::optional<double> CCalculateData::GetValFunction(std::string const &name)
+boost::optional<float> CCalculateData::GetValFunction(std::string const &name, DataProgram const &pData)
 {
-	auto pair = *m_data->m_dataFunctions.find(name);
+	auto pair = *pData.m_dataFunctions.find(name);
 	auto data = pair.second;
-	double result = 0;
+	float result = 0;
 	if (data.isTwoOperand)
 	{
-		double valFirstVar = 0;
-		double valSecondVar = 0;
-		AbilGetVal(data.firstVar, valFirstVar);
-		AbilGetVal(data.secondVar, valSecondVar);
+		float valFirstVar = 0;
+		float valSecondVar = 0;
+		Calculate(data.firstVar, valFirstVar, pData);
+		Calculate(data.secondVar, valSecondVar, pData);
 		// TODO: make IsNaN function which checks
 		// bool IsNaN(double value) { return value != value; }
 		if (valFirstVar != valFirstVar)
@@ -59,14 +58,14 @@ boost::optional<double> CCalculateData::GetValFunction(std::string const &name)
 		}
 		return CalcValTwoVar(data.operand, valFirstVar, valSecondVar);
 	}
-	if (AbilGetVal(data.firstVar, result))
+	if (Calculate(data.firstVar, result, pData))
 	{
 		return result;
 	}
 	return NAN;
 }
 
-double CCalculateData::CalcValTwoVar(TypeOperand operation, double firstVal, double secondVal) const
+float CCalculateData::CalcValTwoVar(TypeOperand operation, float firstVal, float secondVal) const
 {
 	if (operation == TypeOperand::multiplication)
 	{

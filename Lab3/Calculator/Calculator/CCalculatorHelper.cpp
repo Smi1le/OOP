@@ -11,9 +11,7 @@ using namespace std;
 
 CCalculatorHelper::CCalculatorHelper()
 {
-	m_data = std::make_shared<DataProgram>();
-	m_functions = std::make_shared<CFunctions>(m_data);
-	m_outputData = std::make_shared<COutputData>(m_data);
+	m_node = make_shared<CNode>();
 }
 
 void CCalculatorHelper::SetCommand()
@@ -24,10 +22,10 @@ void CCalculatorHelper::SetCommand()
 	{
 		cout << ">> ";
 		getline(cin, command);
-	} while (ParsingInputCommands(command));
+	} while (CallCommand(command));
 }
 
-bool CCalculatorHelper::ParsingInputCommands(std::string const & command)
+bool CCalculatorHelper::CallCommand(std::string const & command)
 {
 	vector<string> instructions;
 	boost::split(instructions, command, boost::is_any_of(" "));
@@ -43,14 +41,14 @@ bool CCalculatorHelper::ParsingInputCommands(std::string const & command)
 		}
 		else if (instructions[0] == PRINT_VARS)
 		{
-			if (!m_outputData->PrintVariables())
+			if (!m_node->PrintVariables())
 			{
 				std::cout << "You not initialized not a one variable" << std::endl;
 			}
 		}
 		else if (instructions[0] == PRINT_FNS)
 		{
-			if (!m_outputData->PrintFunctions())
+			if (!m_node->PrintFunctions())
 			{
 				std::cout << "You not initialized not a one function" << std::endl;
 			}
@@ -61,7 +59,7 @@ bool CCalculatorHelper::ParsingInputCommands(std::string const & command)
 		}
 		if (instructions[0] == ADD_VAR)
 		{
-			if (!m_functions->AddVariable(instructions[1]))
+			if (!m_node->AddVariable(instructions[1]))
 			{
 				std::cout << "It is impossible to add a variable" << std::endl;
 			}
@@ -70,14 +68,14 @@ bool CCalculatorHelper::ParsingInputCommands(std::string const & command)
 		{
 			if (IsNumber(instructions[3]))
 			{
-				if (!m_functions->AssValToVar(instructions[1], atof(instructions[3].c_str())))
+				if (!m_node->AssValToVar(instructions[1], static_cast<float>(atof(instructions[3].c_str()))))
 				{
 					std::cout << "It failed to pass the value of one variable to another" << std::endl;
 				}
 			}
 			else
 			{
-				if (!m_functions->AssValToVar(instructions[1], instructions[3]))
+				if (!m_node->AssValToVar(instructions[1], instructions[3]))
 				{
 					std::cout << "Failed to pass the value of the variable" << std::endl;
 				}
@@ -85,14 +83,14 @@ bool CCalculatorHelper::ParsingInputCommands(std::string const & command)
 		}
 		else if (instructions[0] == ADD_FUNCTION)
 		{
-			if (!m_functions->AddFunction(instructions))
+			if (!m_node->AddFunction(instructions))
 			{
 				std::cout << "It is impossible to add a function" << std::endl;
 			}
 		}
 		else if (instructions[0] == PRINT)
 		{
-			if (instructions.size() > 1 && !m_outputData->Print(instructions[1]))
+			if (instructions.size() > 1 && !m_node->Print(instructions[1]))
 			{
 				std::cout << "You did not create a variable and a function with the same name" << std::endl;
 			}
@@ -136,12 +134,12 @@ bool CCalculatorHelper::IsOperation(std::string const &op) const
 	return (op == "*" || op == "+" || op == "-" || op == "/");
 }
 
-double CCalculatorHelper::GetValue(std::string const &var)
+/*double CCalculatorHelper::GetValue(std::string const &var)
 {
 
 	auto element = *m_data->m_dataVariables.find(var);
 	return element.second;
-}
+}*/
 
 bool CCalculatorHelper::IsNumber(std::string const &val) const
 {

@@ -150,6 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CalculateData.h" />
+    <ClInclude Include="Node.h" />
     <ClInclude Include="DataProgram.h" />
     <ClInclude Include="Expression.h" />
     <ClInclude Include="Config.h" />
@@ -162,6 +163,7 @@
   <ItemGroup>
     <ClCompile Include="CalculateData.cpp" />
     <ClCompile Include="Calculator.cpp" />
+    <ClCompile Include="Node.cpp" />
     <ClCompile Include="Functions.cpp" />
     <ClCompile Include="CCalculatorHelper.cpp" />
     <ClCompile Include="OutputData.cpp" />

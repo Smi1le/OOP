@@ -6,45 +6,44 @@
 
 using namespace std;
 
-CFunctions::CFunctions(std::shared_ptr<DataProgram> tData)
+CFunctions::CFunctions()
 {
-	m_data = tData;
 }
 
-bool CFunctions::AddVariable(std::string const & var, double val)
+bool CFunctions::AddVariable(std::string const & var, DataProgram &data, float val)
 {
-	if (!m_data->m_dataVariables.empty() && m_data->m_dataVariables.find(var) != m_data->m_dataVariables.end())
+	if (!data.m_dataVariables.empty() && data.m_dataVariables.find(var) != data.m_dataVariables.end())
 	{
 		return false;
 	}
-	m_data->m_dataVariables.insert(std::pair<std::string, double>(var, (std::round(val * 100) / 100)));
+	data.m_dataVariables.insert(std::pair<std::string, float>(var, (std::round(val * 100) / 100)));
 	return true;
 }
 
-bool CFunctions::AssValToVar(std::string const & var1, double val)
+bool CFunctions::AssValToVar(std::string const & var1, float val, DataProgram &data)
 {
-	if (!m_data->m_dataVariables.empty() && m_data->m_dataVariables.find(var1) != m_data->m_dataVariables.end())
+	if (!data.m_dataVariables.empty() && data.m_dataVariables.find(var1) != data.m_dataVariables.end())
 	{
-		m_data->m_dataVariables.at(var1) = round(val * 100) / 100;
+		data.m_dataVariables.at(var1) = round(val * 100) / 100;
 		return true;
 	}
-	return AddVariable(var1, val);
+	return AddVariable(var1, data, val);
 }
 
-bool CFunctions::AssValToVar(std::string const & var1, std::string const & var2)
+bool CFunctions::AssValToVar(std::string const & var1, std::string const & var2, DataProgram &data)
 {
 	
-	auto element = m_data->m_dataVariables.find(var2);
-	if (element == m_data->m_dataVariables.end())
+	auto element = data.m_dataVariables.find(var2);
+	if (element == data.m_dataVariables.end())
 	{
 		return false;
 	}
-	if (m_data->m_dataVariables.find(var1) != m_data->m_dataVariables.end())
+	if (data.m_dataVariables.find(var1) != data.m_dataVariables.end())
 	{
-		m_data->m_dataVariables.at(var1) = element->second;
+		data.m_dataVariables.at(var1) = element->second;
 		return true;
 	}
-	return AddVariable(var1, element->second);
+	return AddVariable(var1, data, element->second);
 }
 
 TypeOperand CheckOperand(std::string const &op)
@@ -64,17 +63,16 @@ TypeOperand CheckOperand(std::string const &op)
 	return TypeOperand::substraction;
 }
 
-bool CFunctions::AddFunction(Vector const &inst)
+bool CFunctions::AddFunction(Vector const &inst, DataProgram &data)
 {
 	std::string nameFunc = inst[1];
-	if (!m_data->m_dataFunctions.empty() && m_data->m_dataFunctions.find(nameFunc) != m_data->m_dataFunctions.end())
+	if (!data.m_dataFunctions.empty() && data.m_dataFunctions.find(nameFunc) != data.m_dataFunctions.end())
 	{
 		return false;
 	}
 	DataFunction pData;
 	std::string firstName = inst[NUMBER_POS_FIRST_NAME];
 	pData.firstVar = firstName;
-//#pragma message inst.size() > 5?
 	if (inst.size() > 5)
 	{
 		std::string operation = inst[NUMBER_POS_OPER];
@@ -83,6 +81,6 @@ bool CFunctions::AddFunction(Vector const &inst)
 		pData.secondVar = secondName;
 		pData.isTwoOperand = true;
 	}
-	m_data->m_dataFunctions.insert({ nameFunc, pData });
+	data.m_dataFunctions.insert({ nameFunc, pData });
 	return true;
 }

@@ -8,11 +8,9 @@
 class CFunctions
 {
 public:
-	CFunctions(std::shared_ptr<DataProgram> tData);
-	bool AddVariable(std::string const & var, double val = NAN);
-	bool AddFunction(Vector const &inst);
-	bool AssValToVar(std::string const & var1, std::string const & var2);
-	bool AssValToVar(std::string const & var1, double val);
-private:
-	std::shared_ptr<DataProgram> m_data;
+	CFunctions();
+	bool AddVariable(std::string const & var, DataProgram &data, float val = NAN);
+	bool AddFunction(Vector const &inst, DataProgram &data);
+	bool AssValToVar(std::string const & var1, std::string const & var2, DataProgram &data);
+	bool AssValToVar(std::string const & var1, float val, DataProgram &data);
 };
