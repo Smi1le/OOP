@@ -15,14 +15,14 @@ BOOST_FIXTURE_TEST_SUITE(Calculator, CCalcFixture)
 	BOOST_AUTO_TEST_CASE(the_ability_to_add_any_kind_of_variable)
 	{
 		BOOST_CHECK(node.AddVariable("var1"));
-		BOOST_CHECK(node.AssValToVar("var1", 0.5f));
+		BOOST_CHECK(node.AssValToVar("var1", 0.5));
 	}
 
 	BOOST_AUTO_TEST_CASE(Ad_2_variables_and_their_initialization)
 	{
 		BOOST_CHECK(node.AddVariable("var1"));
 		BOOST_CHECK(node.AddVariable("var2"));
-		BOOST_CHECK(node.AssValToVar("var1", 0.5f));
+		BOOST_CHECK(node.AssValToVar("var1", 0.5));
 		BOOST_CHECK(node.AssValToVar("var2", "var1"));
 	}
 
@@ -31,6 +31,7 @@ BOOST_FIXTURE_TEST_SUITE(Calculator, CCalcFixture)
 		BOOST_CHECK(node.AddVariable("var1"));
 		BOOST_CHECK(node.AddVariable("var2"));
 		//ѕроверим что нельз€ добавить уже инициализированную переменную
+		BOOST_CHECK(!node.AddVariable("var1"));
 		BOOST_CHECK(!node.AddVariable("var2"));
 	}
 
@@ -46,11 +47,11 @@ BOOST_FIXTURE_TEST_SUITE(Calculator, CCalcFixture)
 	{
 		BOOST_CHECK(node.AddVariable("x"));
 		BOOST_CHECK(node.AddVariable("y"));
-		BOOST_CHECK(node.AssValToVar("x", 32.56f));
-		BOOST_CHECK(node.AssValToVar("y", 12.6f));
+		BOOST_CHECK(node.AssValToVar("x", 32.56));
+		BOOST_CHECK(node.AssValToVar("y", 12.6));
 		BOOST_CHECK(node.AddFunction({ "fn", "XPlusY", "=", "x", "+", "y" }));
 		BOOST_CHECK(node.AddFunction({ "fn", "XPlusYY", "=", "x", "+", "XPlusY" }));
-		BOOST_CHECK_EQUAL(node.GetValue("XPlusYY"), 77.72f);
+		BOOST_CHECK_EQUAL(node.GetValue("XPlusYY"), 77.72);
 	}
 
 	BOOST_AUTO_TEST_CASE(it_is_impossible_to_create_the_function_twice)
@@ -60,8 +61,6 @@ BOOST_FIXTURE_TEST_SUITE(Calculator, CCalcFixture)
 		BOOST_CHECK(node.AddFunction({ "fn", "XPlusY", "=", "x", "+", "y" }));
 		BOOST_CHECK(!node.AddFunction({ "fn", "XPlusY", "=", "x", "+", "y" }));
 	}
-
-
 
 	struct _check_input : CCalcFixture
 	{
@@ -101,10 +100,6 @@ BOOST_FIXTURE_TEST_SUITE(Calculator, CCalcFixture)
 
 		BOOST_AUTO_TEST_CASE(calculation_value_two_variable)
 		{
-			BOOST_CHECK(node.AddVariable("x"));
-			BOOST_CHECK(node.AddVariable("y"));
-			BOOST_CHECK(node.AssValToVar("x", 32.56f));
-			BOOST_CHECK(node.AssValToVar("y", 12.6f));
 			BOOST_CHECK_EQUAL(calculator.CalcValTwoVar(TypeOperand::multiplication, 1.0, 3.5 ), 3.5);
 			BOOST_CHECK_EQUAL(calculator.CalcValTwoVar(TypeOperand::addition, 1.0, 3.5), 4.5);
 			BOOST_CHECK_EQUAL(calculator.CalcValTwoVar(TypeOperand::division, 3.5, 3.5), 1.0);
@@ -115,15 +110,16 @@ BOOST_FIXTURE_TEST_SUITE(Calculator, CCalcFixture)
 		{
 			BOOST_CHECK(node.AddVariable("x"));
 			BOOST_CHECK(node.AddVariable("y"));
-			BOOST_CHECK(node.AssValToVar("x", 32.56f));
-			BOOST_CHECK(node.AssValToVar("y", 12.6f));
+			BOOST_CHECK(node.AssValToVar("x", 32.56));
+			BOOST_CHECK(node.AssValToVar("y", 12.6));
 			BOOST_CHECK(node.AddFunction({ "fn", "XPlusY", "=", "x", "+", "y" }));
 			BOOST_CHECK(node.AddFunction({ "fn", "XPlusYY", "=", "x", "+", "XPlusY" }));
-			BOOST_CHECK_EQUAL(node.GetValue("XPlusY"), 45.16f);
-			BOOST_CHECK_EQUAL(node.GetValue("XPlusYY"), 77.72f);
+			BOOST_CHECK(node.AddFunction({ "fn", "Function2", "=", "XPlusYY", "+", "XPlusY" }));
+			BOOST_CHECK_EQUAL(node.GetValue("XPlusY"), 45.16); // ѕроваливаетс€ из-за погрешности double'a
+			BOOST_CHECK_EQUAL(node.GetValue("XPlusYY"), 77.72);
+			BOOST_CHECK_EQUAL(node.GetValue("Function2"), 122.88);
 		}
 
 	BOOST_AUTO_TEST_SUITE_END()
-
 
 BOOST_AUTO_TEST_SUITE_END()

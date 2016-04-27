@@ -149,24 +149,20 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CalculateData.h" />
-    <ClInclude Include="Node.h" />
-    <ClInclude Include="DataProgram.h" />
-    <ClInclude Include="Expression.h" />
+    <ClInclude Include="Calculator.h" />
+    <ClInclude Include="Function.h" />
     <ClInclude Include="Config.h" />
-    <ClInclude Include="Functions.h" />
     <ClInclude Include="CCalculatorHelper.h" />
-    <ClInclude Include="OutputData.h" />
+    <ClInclude Include="FunctionContext.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CalculateData.cpp" />
+    <ClCompile Include="Function.cpp" />
+    <ClCompile Include="FunctionContext.cpp" />
+    <ClCompile Include="Task_3_calc.cpp" />
     <ClCompile Include="Calculator.cpp" />
-    <ClCompile Include="Node.cpp" />
-    <ClCompile Include="Functions.cpp" />
     <ClCompile Include="CCalculatorHelper.cpp" />
-    <ClCompile Include="OutputData.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
