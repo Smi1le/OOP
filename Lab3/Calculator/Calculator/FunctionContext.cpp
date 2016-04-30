@@ -5,57 +5,9 @@
 
 
 
-bool IFunctionContext::GetValueVariable(std::string const &var, double &number)
-{
-	if (!m_variables.empty())
-	{
-		auto element = m_variables.find(var);
-		if (element != m_variables.end())
-		{
-			number += (*element).second;
-			return true;
-		}
-	}
-	if (!m_functions.empty())
-	{
-		auto element = m_functions.find(var);
-		if (element != m_functions.end())
-		{
-			auto number1 = (*element).second;
-			GetValueVariable(number1.GetElement(1), number);
-			if (number1.IsTwoOperand())
-			{
-				GetValueVariable(number1.GetElement(2), number);
-			}
-			return true;
-		}
-	}
-	return false;
-}
 
-double IFunctionContext::CalcValTwoVar(TypeOperand operation, double firstVal, double secondVal) const
-{
-	if (operation == TypeOperand::multiplication)
-	{
-		return firstVal * secondVal;
-	}
-	if (operation == TypeOperand::substraction)
-	{
-		return firstVal - secondVal;
-	}
-	if (operation == TypeOperand::addition)
-	{
-		return firstVal + secondVal;
-	}
-	return firstVal / secondVal;
-}
 
-bool IsNumber()
-{
-
-}
-
-double IFunctionContext::Calculate(std::string const &leftVar, std::string const &rightVar, TypeOperand const &op, bool twoOp)
+/*double IFunctionContext::Calculate(std::string const &leftVar, std::string const &rightVar, TypeOperand const &op, bool twoOp)
 {
 	std::cout << "---------------------" << std::endl;
 	if (twoOp)
@@ -97,4 +49,4 @@ bool IFunctionContext::IsNumber(std::string const &val) const
 		}
 	}
 	return true;
-}
+}*/

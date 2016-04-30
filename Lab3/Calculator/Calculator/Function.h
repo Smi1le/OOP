@@ -1,15 +1,10 @@
 #pragma once
 #include <string>
 #include "Config.h"
-//#include "Calculator.h"
-#include <memory>
 #include <iostream>
 #include <map>
 
-
 class IFunctionContext;
-
-
 
 class CFunction
 {

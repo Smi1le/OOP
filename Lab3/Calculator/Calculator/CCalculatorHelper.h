@@ -1,7 +1,6 @@
 #pragma once
 #include "Calculator.h"
 #include "Function.h"
-#include <memory>
 
 class CCalculatorHelper
 {

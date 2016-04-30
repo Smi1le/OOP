@@ -4,7 +4,6 @@
 #include <iostream>
 #include <boost\algorithm\string.hpp>
 #include <boost\algorithm\string\split.hpp>
-#include <iterator>
 #include <algorithm>
 
 using namespace std;

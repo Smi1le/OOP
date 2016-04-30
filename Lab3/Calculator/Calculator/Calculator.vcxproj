@@ -159,7 +159,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Function.cpp" />
-    <ClCompile Include="FunctionContext.cpp" />
     <ClCompile Include="Task_3_calc.cpp" />
     <ClCompile Include="Calculator.cpp" />
     <ClCompile Include="CCalculatorHelper.cpp" />

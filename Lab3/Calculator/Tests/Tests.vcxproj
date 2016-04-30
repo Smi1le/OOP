@@ -173,21 +173,18 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Calculator\CalculateData.h" />
+    <ClInclude Include="..\Calculator\Calculator.h" />
     <ClInclude Include="..\Calculator\CCalculatorHelper.h" />
-    <ClInclude Include="..\Calculator\DataProgram.h" />
-    <ClInclude Include="..\Calculator\Functions.h" />
-    <ClInclude Include="..\Calculator\Node.h" />
-    <ClInclude Include="..\Calculator\OutputData.h" />
+    <ClInclude Include="..\Calculator\Function.h" />
+    <ClInclude Include="..\Calculator\FunctionContext.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Calculator\CalculateData.cpp" />
+    <ClCompile Include="..\Calculator\Calculator.cpp" />
     <ClCompile Include="..\Calculator\CCalculatorHelper.cpp" />
-    <ClCompile Include="..\Calculator\Functions.cpp" />
-    <ClCompile Include="..\Calculator\Node.cpp" />
-    <ClCompile Include="..\Calculator\OutputData.cpp" />
+    <ClCompile Include="..\Calculator\Function.cpp" />
+    <ClCompile Include="..\Calculator\FunctionContext.cpp" />
     <ClCompile Include="Calc_Tests.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

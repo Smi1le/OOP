@@ -38,8 +38,7 @@ bool CCalculator::Print(string const &name)
 		auto outElem1 = this->m_functions.find(name);
 		if (outElem1 != m_functions.end())
 		{
-			IFunctionContext ctx(m_functions, m_variables);
-			cout << outElem1->first << ":" << outElem1->second.Calculate(&ctx) << endl;
+			cout << outElem1->first << ":" << outElem1->second.Calculate(this) << endl;
 			return true;
 		}
 	}
@@ -54,8 +53,7 @@ bool CCalculator::PrintFunctions()
 	}
 	for (auto elem : m_functions)
 	{
-		IFunctionContext ctx(m_functions, m_variables);
-		cout << elem.first << ":" << elem.second.Calculate(&ctx) << endl;
+		cout << elem.first << ":" << elem.second.Calculate(this) << endl;
 	}
 	return true;
 }
@@ -141,8 +139,8 @@ double CCalculator::GetValue(string const &var)
 	auto element1 = m_functions.find(var);
 	if (element1 != m_functions.end())
 	{
-		IFunctionContext ctx(m_functions, m_variables);
-		return (*element1).second.Calculate(&ctx);
+		//IFunctionContext ctx(m_functions, m_variables);
+		return (*element1).second.Calculate(this);
 	}
 }
 
@@ -155,4 +153,81 @@ bool CCalculator::IsNumber(string const &val) const
 		}
 	}
 	return true;
+}
+
+bool CCalculator::GetValueVariable(std::string const &var, double &number)
+{
+	if (!m_variables.empty())
+	{
+		auto element = m_variables.find(var);
+		if (element != m_variables.end())
+		{
+			number += (*element).second;
+			return true;
+		}
+	}
+	if (!m_functions.empty())
+	{
+		auto element = m_functions.find(var);
+		if (element != m_functions.end())
+		{
+			auto number1 = (*element).second;
+			GetValueVariable(number1.GetElement(1), number);
+			if (number1.IsTwoOperand())
+			{
+				GetValueVariable(number1.GetElement(2), number);
+			}
+			return true;
+		}
+	}
+	return false;
+}
+
+double CCalculator::CalcValTwoVar(TypeOperand operation, double firstVal, double secondVal) const
+{
+	if (operation == TypeOperand::multiplication)
+	{
+		return firstVal * secondVal;
+	}
+	if (operation == TypeOperand::substraction)
+	{
+		return firstVal - secondVal;
+	}
+	if (operation == TypeOperand::addition)
+	{
+		return firstVal + secondVal;
+	}
+	return firstVal / secondVal;
+}
+
+double CCalculator::Calculate(std::string const &leftVar, std::string const &rightVar, TypeOperand const &op, bool twoOp)
+{
+	if (twoOp)
+	{
+		double valFirstVar = 0;
+		double valSecondVar = 0;
+		if (!IsNumber(leftVar))
+		{
+			GetValueVariable(leftVar, valFirstVar);
+		}
+		else
+		{
+			valFirstVar = atof(leftVar.c_str());
+		}
+		if (!IsNumber(rightVar))
+		{
+			GetValueVariable(rightVar, valSecondVar);
+		}
+		else
+		{
+			valSecondVar = atof(rightVar.c_str());
+		}
+		return CalcValTwoVar(op, valFirstVar, valSecondVar);
+	}
+	double result = 0;
+	if (GetValueVariable(leftVar, result))
+	{
+		return result;
+	}
+	return NAN;
 }

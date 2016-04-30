@@ -24,22 +24,16 @@
     <ClInclude Include="targetver.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="..\Calculator\Functions.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
     <ClInclude Include="..\Calculator\CCalculatorHelper.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="..\Calculator\Node.h">
+    <ClInclude Include="..\Calculator\Calculator.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="..\Calculator\CalculateData.h">
+    <ClInclude Include="..\Calculator\Function.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="..\Calculator\DataProgram.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Calculator\OutputData.h">
+    <ClInclude Include="..\Calculator\FunctionContext.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
   </ItemGroup>
@@ -53,19 +47,16 @@
     <ClCompile Include="Calc_Tests.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="..\Calculator\Functions.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
     <ClCompile Include="..\Calculator\CCalculatorHelper.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="..\Calculator\Node.cpp">
+    <ClCompile Include="..\Calculator\Calculator.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="..\Calculator\CalculateData.cpp">
+    <ClCompile Include="..\Calculator\Function.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="..\Calculator\OutputData.cpp">
+    <ClCompile Include="..\Calculator\FunctionContext.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
   </ItemGroup>
