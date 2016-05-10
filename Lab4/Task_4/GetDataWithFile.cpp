@@ -7,30 +7,31 @@
 #include <boost\algorithm\string.hpp>
 #include <boost\algorithm\string\split.hpp>
 
-dataShapes GetDataWithFile(std::string const &nameInputFile)
+using namespace std;
+
+dataShapes DownloadTheFile(std::string const &nameInputFile)
 {
-	std::ifstream inputFile(nameInputFile);
-	std::string command;
-	std::vector<std::string> info;
+	ifstream inputFile(nameInputFile);
+	string command;
+	vector<string> info;
 	if (!inputFile.is_open())
 	{
-		std::cout << "It is impossible to consider that you have entered the file" << std::endl;
+		cout << "It is impossible to consider that you have entered the file" << endl;
 	}
 	while (std::getline(inputFile, command))
 	{
 		info.push_back(command);
 	}
-	dataShapes data = ParsingInfoShapes(info);
-	return data;
+	return  ParseInfo(info);
 
 }
 
-dataShapes ParsingInfoShapes(std::vector<std::string> const &info)
+dataShapes ParseInfo(vector<string> const &info)
 {
 	dataShapes data;
 	for (auto elem : info)
 	{
-		std::vector<std::string> inst;
+		vector<string> inst;
 		boost::split(inst, elem, boost::is_any_of(" "));
 		for (auto &elem1 : inst)// Удаление лишних элементов, которые могли остаться после парсинга
 		{

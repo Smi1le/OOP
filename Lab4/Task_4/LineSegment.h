@@ -5,22 +5,25 @@
 class CLineSegment : public IShape
 {
 public:
-	CLineSegment(std::shared_ptr<CPoint> const &p1, std::shared_ptr<CPoint> const &p2, std::string const &color):
-		m_firstPoint(p1),
-		m_secondPoint(p2),
-		m_color(color)
-	{}
-	~CLineSegment() = default;
-	float GetLengthSegment() const;
-	point GetPointUpLeftAngle() const;
+	CLineSegment(Point const &p1, Point const &p2, Color const &color);
+
+	//GetLength - yes
+	float GetLength() const;
+
+	//rename - yes
+	Point GetFirstPoint() const;
+
+	// move method to view - no
 	float GetAngle() const;
-	float GetPerimeterShape() const override;
-	float GetAreaShape() const override;
-	std::string GetColorLine() const override;
+
+
+	float GetPerimeter() const override;
+	float GetArea() const override;
+	Color GetLineColor() const override;
 	std::string GetDescription() const override;
-	std::string GetNameShape() const override;
+	std::string GetName() const override;
 private:
-	std::shared_ptr<CPoint> m_firstPoint;
-	std::shared_ptr<CPoint> m_secondPoint;
-	std::string m_color;
+	Point m_firstPoint;
+	Point m_secondPoint;
+	Color m_color;
 };

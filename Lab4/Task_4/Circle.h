@@ -5,26 +5,27 @@
 class CCircle : public ISolidShape
 {
 public:
-	CCircle(std::shared_ptr<CPoint> const &p1, float radius, std::string const &edgeColor, std::string const &fillColor)
-		: m_pointCenter(p1)
-		, m_radius(radius)
-		, m_edgeColor(edgeColor)
-		, m_fillColor(fillColor)
-	{}
-	~CCircle() = default;
-	std::string GetColorLine() const override;
+	//move to cpp
+	CCircle(Point const &p1, float radius, Color const &edgeColor, Color const &fillColor);
+	Color GetLineColor() const override;
 	std::string GetDescription()const override;
-	std::string GetColor() const override;
-	float GetPerimeterShape() const override;
+	Color GetColor() const override;
+	float GetPerimeter() const override;
 	float GetRadius() const;
 	//CCircle GetCopy() const;
-	CPoint GetPointCenter() const;
-	std::string GetNameShape() const override;
+
+	// GetCenter
+	Point GetPointCenter() const;
+
+	std::string GetName() const override;
 	//point GetCoordinates();
-	float GetAreaShape() const override;
+	float GetArea() const override;
 private:
-	std::shared_ptr<CPoint> m_pointCenter;
+	// m_center
+	Point m_pointCenter;
 	float m_radius;
-	std::string m_edgeColor;
-	std::string m_fillColor;
+
+	// structs
+	Color m_edgeColor;
+	Color m_fillColor;
 };

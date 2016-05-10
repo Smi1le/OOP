@@ -4,15 +4,14 @@
 class CPoint : public IShape
 {
 public:
-	CPoint(point const &p) : m_point(p)
-	{}
-	~CPoint() = default;
-	point GetCoordinates() const;
-	float GetAreaShape() const override;
-	float GetPerimeterShape() const override;
-	std::string GetColorLine() const override;
+	CPoint(Point const &p, Color const &edgeColor);
+	Point GetCoordinates() const;
+	float GetArea() const override;
+	float GetPerimeter() const override;
+	Color GetLineColor() const override;
 	std::string GetDescription() const override;
-	std::string GetNameShape() const override;
+	std::string GetName() const override;
 private:
-	point m_point;
+	Point m_point;
+	Color m_edgeColor;
 };

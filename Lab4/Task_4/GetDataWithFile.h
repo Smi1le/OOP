@@ -5,5 +5,8 @@
 
 using dataShapes = std::vector<std::vector<std::string>>;
 
-dataShapes GetDataWithFile(std::string const &nameInputFile);
-dataShapes ParsingInfoShapes(std::vector<std::string> const &info);
+// loadFile
+dataShapes DownloadTheFile(std::string const &nameInputFile);
+
+// parseInfo
+dataShapes ParseInfo(std::vector<std::string> const &info);

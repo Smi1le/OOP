@@ -5,29 +5,26 @@
 class CTriangle : public ISolidShape
 {
 public:
-	CTriangle(std::shared_ptr<CPoint> const &p1, std::shared_ptr<CPoint> const &p2, std::shared_ptr<CPoint> const &p3, std::string const &edgeColor, std::string const &fillColor)
-		: m_firstPoint(p1)
-		, m_secondPoint(p2)
-		, m_thirdPoint(p3)
-		, m_edgeColor(edgeColor)
-		, m_fillColor(fillColor)
-	{}
-	std::string GetColorLine() const override;
+	CTriangle(Point const &p1, Point const &p2, Point const &p3, Color const &edgeColor, Color const &fillColor);
+	Color GetLineColor() const override;
 	std::string GetDescription()const override;
-	std::string GetColor() const override;
-	std::string GetNameShape() const override;
-	float GetPerimeterShape() const override;
-	float GetAreaShape() const override;
+	Color GetColor() const override;
+	std::string GetName() const override;
+	float GetPerimeter() const override;
+	float GetArea() const override;
 	
-	CPoint GetPoint(int p) const; //¬озможность получить определенную точку 1, 2 или 3-ю
-	~CTriangle() = default;
+	Point GetPoint(TRIANGLE_POINT p) const; //¬озможность получить определенную точку 1, 2 или 3-ю
 private:
 	float GetFirstSideLength() const;
 	float GetSecondSideLength() const;
 	float GetThirdSideLength() const;
-	std::shared_ptr<CPoint> m_firstPoint;
-	std::shared_ptr<CPoint> m_secondPoint;
-	std::shared_ptr<CPoint> m_thirdPoint;
-	std::string m_edgeColor;
-	std::string m_fillColor;
+
+	//implement to array[] or vector
+	Point m_firstPoint;
+	Point m_secondPoint;
+	Point m_thirdPoint;
+	
+	
+	Color m_edgeColor;
+	Color m_fillColor;
 };

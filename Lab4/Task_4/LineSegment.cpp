@@ -5,16 +5,23 @@
 #include <cmath>
 #include <iostream>
 
+static const float G_PI = 3.14159265358979323846f;
 
-point CLineSegment::GetPointUpLeftAngle() const
+CLineSegment::CLineSegment(Point const &p1, Point const &p2, Color const &color) :
+	m_firstPoint(p1),
+	m_secondPoint(p2),
+	m_color(color)
+{}
+
+Point CLineSegment::GetFirstPoint() const
 {
-	return m_firstPoint->GetCoordinates();
+	return m_firstPoint;
 }
 
-float CLineSegment::GetLengthSegment() const
+float CLineSegment::GetLength() const
 {
-	return sqrt(pow(m_firstPoint->GetCoordinates().first - m_secondPoint->GetCoordinates().first, 2) + 
-		pow(m_firstPoint->GetCoordinates().second - m_secondPoint->GetCoordinates().second, 2));
+	return sqrt(pow(m_firstPoint.x - m_secondPoint.x, 2) + 
+		pow(m_firstPoint.y - m_secondPoint.y, 2));
 }
 
 /*
@@ -23,32 +30,14 @@ float CLineSegment::GetLengthSegment() const
 
 float CLineSegment::GetAngle() const
 {
-
-	float X1 = m_secondPoint->GetCoordinates().first - m_firstPoint->GetCoordinates().first;
-	float Y1 = m_secondPoint->GetCoordinates().second - m_firstPoint->GetCoordinates().second;
-
-
-
-
-	/*float t1 = m_firstPoint->GetCoordinates().second * m_secondPoint->GetCoordinates().second +
-		m_firstPoint->GetCoordinates().first * m_secondPoint->GetCoordinates().first;
-	float t2 = sqrt(pow(m_firstPoint->GetCoordinates().second, 2) + pow(m_firstPoint->GetCoordinates().first, 2));
-	float t3 = sqrt(pow(m_secondPoint->GetCoordinates().second, 2) + pow(m_secondPoint->GetCoordinates().first, 2));
-	float t = t1 / (t2 * t3);*/
+	float X1 = static_cast<float>(m_secondPoint.x - m_firstPoint.x);
+	float Y1 = m_secondPoint.y - m_firstPoint.y;
 
 	float t1 = X1 * X1 + Y1 * 0.f;
 	float t2 = sqrt(pow(X1, 2) + pow(Y1, 2));
 	float t3 = sqrt(pow(X1, 2));
 	float t = t1 / (t2 * t3);
 
-
-	std::cout << "m_firstPoint->GetCoordinates().first = " << m_firstPoint->GetCoordinates().first << std::endl;
-	std::cout << "m_firstPoint->GetCoordinates().second = " << m_firstPoint->GetCoordinates().second << std::endl;
-	std::cout << "m_secondPoint->GetCoordinates().first1 = " << m_secondPoint->GetCoordinates().first << std::endl;
-	std::cout << "m_secondPoint->GetCoordinates().second = " << m_secondPoint->GetCoordinates().second << std::endl;
-	std::cout << "t1 = " << t1 << std::endl;
-	std::cout << "t2 = " << t2 << std::endl;
-	std::cout << "t3 = " << t3 << std::endl;
 	if (t < -1)
 	{
 		t = -1;
@@ -57,33 +46,36 @@ float CLineSegment::GetAngle() const
 	{
 		t = 1;
 	}
-	std::cout << "t = " << t << std::endl;
-	return acos(t) * 180.f / M_PI;
+	if (m_firstPoint.x > m_secondPoint.x)
+	{
+		return (-1) * static_cast<float>(asin(t) * 180.f / G_PI);
+	}
+	return static_cast<float>(asin(t) * 180.f / G_PI);
 }
 
-float CLineSegment::GetPerimeterShape() const
+float CLineSegment::GetPerimeter() const
 {
-	return GetLengthSegment();
+	return GetLength();
 }
 
-float CLineSegment::GetAreaShape() const
+float CLineSegment::GetArea() const
 {
 	return float(0);
 }
 
-std::string CLineSegment::GetColorLine() const
+Color CLineSegment::GetLineColor() const
 {
-	return "Red";
+	return m_color;
 }
 
 std::string CLineSegment::GetDescription() const
 {
-	return "Line Segment <<" + std::to_string(m_firstPoint->GetCoordinates().first) + ", " + std::to_string(m_firstPoint->GetCoordinates().first)
-		+ "><" + std::to_string(m_secondPoint->GetCoordinates().first) + ", " + std::to_string(m_secondPoint->GetCoordinates().first) +
-		">>, S = " + std::to_string(GetAreaShape()) + ", P = " + std::to_string(GetPerimeterShape());
+	return "Line Segment <<" + std::to_string(m_firstPoint.x) + ", " + std::to_string(m_firstPoint.y)
+		+ "><" + std::to_string(m_secondPoint.x) + ", " + std::to_string(m_secondPoint.y) +
+		">>, S = " + std::to_string(GetArea()) + ", P = " + std::to_string(GetPerimeter());
 }
 
-std::string CLineSegment::GetNameShape() const
+std::string CLineSegment::GetName() const
 {
-	return "Line segment";
+	return LINE_SEGMENT;
 }

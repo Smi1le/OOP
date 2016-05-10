@@ -6,29 +6,23 @@
 class CRectangle : public ISolidShape
 {
 public:
-	CRectangle(std::shared_ptr<CPoint> const &p1, std::shared_ptr<CPoint> const &p2, std::string const &edgeColor, std::string const &fillColor):
-		m_firstPoint(p1),
-		m_secondPoint(p2),
-		m_edgeColor(edgeColor),
-		m_fillColor(fillColor)
-	{
-	}
-	~CRectangle() = default;
-	point GetPointUpLeftAngle() const;
-	std::string GetColorLine() const override;
+	//move construction to .cpp - yes
+	CRectangle(Point const &p1, Point const &p2, Color const &edgeColor, Color const &fillColor);
+	//rename - yes
+	Point GetFirstPoint() const;
+	Color GetLineColor() const override;
 	std::string GetDescription()const override;
-	std::string GetColor() const override;
-	float GetPerimeterShape() const override;
-	float GetAreaShape() const override;
-	std::string GetNameShape() const override;
+	Color GetColor() const override;
+	float GetPerimeter() const override;
+	float GetArea() const override;
+	std::string GetName() const override;
 	float GetHeight() const;
 	float GetWidth() const;
 private:
-	
-	std::shared_ptr<CPoint> m_firstPoint;
-	std::shared_ptr<CPoint> m_secondPoint;
-	std::string m_edgeColor;
-	std::string m_fillColor;
+	Point m_firstPoint;
+	Point m_secondPoint;
+	Color m_edgeColor;
+	Color m_fillColor;
 };
 
 

@@ -1,32 +1,37 @@
 #include "stdafx.h"
 #include "Point.h"
 
-point CPoint::GetCoordinates() const
+CPoint::CPoint(Point const &p, Color const &edgeColor)
+	: m_point(p)
+	, m_edgeColor(edgeColor)
+{}
+
+Point CPoint::GetCoordinates() const
 {
 	return m_point;
 }
 
 std::string CPoint::GetDescription() const
 {
-	return "Point <" + std::to_string(m_point.first) + ", " + std::to_string(m_point.second) + ">";
+	return "Point <" + std::to_string(m_point.x) + ", " + std::to_string(m_point.y) + ">";
 }
 
-float CPoint::GetAreaShape() const
+float CPoint::GetArea() const
 {
 	return float(0);
 }
 
-float CPoint::GetPerimeterShape() const
+float CPoint::GetPerimeter() const
 {
 	return float(0);
 }
 
-std::string CPoint::GetColorLine() const
+Color CPoint::GetLineColor() const
 {
-	return "Red";
+	return m_edgeColor;
 }
 
-std::string CPoint::GetNameShape() const
+std::string CPoint::GetName() const
 {
-	return "point";
+	return POINT;
 }

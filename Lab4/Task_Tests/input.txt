@@ -1,1 +1,3 @@
-circle 50, 130, 40, #652312, #ff0000
+rectangle, 20, 30, 17, 25, #ff0000, #00ff00
+circle, 10, 54, 24, #bbabbb, #123213
+triangle, 15, 18, 87, 90, 32, 65, #ef82h1, #eead23
