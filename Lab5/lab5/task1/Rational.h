@@ -28,8 +28,9 @@ public:
 	//	cout << r.ToDouble(); // Должно вывести 0.6
 	//////////////////////////////////////////////////////////////////////////
 
+	double ToDouble() const;
 
-
+	std::pair<int, CRational> ToCompoundFraction() const;
 
 	//////////////////////////////////////////////////////////////////////////
 	// TODO: 2. Реализовать унарный + и унарный -
@@ -187,7 +188,7 @@ public:
 	//	например: 7/15
 	//////////////////////////////////////////////////////////////////////////
 
-	friend std::ostream& operator << (std::ostream &is, CRational const &rat);
+	
 
 
 	//////////////////////////////////////////////////////////////////////////
@@ -196,7 +197,7 @@ public:
 	//	например: 7/15
 	//////////////////////////////////////////////////////////////////////////
 
-	//friend std::istream& operator >> (std::istream &is, CRational &rat);
+	
 private:
 	int m_numerator;
 	int m_denominator;
@@ -207,3 +208,7 @@ private:
 
 // Вычисляет наибольший общий знаменатель чисел a и b
 unsigned GCD(unsigned a, unsigned b);
+
+std::ostream& operator << (std::ostream &os, CRational const &rat);
+
+std::istream& operator >> (std::istream &is, CRational &rat);

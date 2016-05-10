@@ -18,6 +18,8 @@ CRational::CRational(int numerator, int denominator)
 	Normalize();
 }
 
+
+
 int CRational::GetNumerator() const
 {
 	return m_numerator;
@@ -45,17 +47,13 @@ unsigned GCD(unsigned a, unsigned b)
 	return (a != 0) ? a : 1;
 }
 
-//////////////////////////////////////////////////////////////////////////
-// TODO: 1. Реализовать метод ToDouble() согласно заданию
-//////////////////////////////////////////////////////////////////////////
+//1
+double CRational::ToDouble()const
+{
+	return static_cast<double>(m_numerator) / static_cast<double>(m_denominator);
+}
 
-
-
-
-//////////////////////////////////////////////////////////////////////////
-// TODO: 2. Реализовать унарный + и унарный -
-//////////////////////////////////////////////////////////////////////////
-
+//2
 CRational const CRational::operator-() const
 {
 	return CRational(-m_numerator, m_denominator);
@@ -67,11 +65,7 @@ CRational const CRational::operator+() const
 }
 
 
-
-//////////////////////////////////////////////////////////////////////////
-// TODO: 3. Реализовать бинарный +
-//////////////////////////////////////////////////////////////////////////
-
+//3
 CRational const CRational::operator +(CRational const &rat) const
 {
 	auto copyRightVal = rat;
@@ -85,10 +79,7 @@ CRational const CRational::operator +(CRational const &rat) const
 	return{ copyLeftVal.first / int(mostLarDiv), copyLeftVal.second / int(mostLarDiv) };
 }
 
-
-//////////////////////////////////////////////////////////////////////////
-// TODO: 4. Реализовать бинарный -
-//////////////////////////////////////////////////////////////////////////
+//4
 CRational const CRational::operator -(CRational const &rat) const
 {
 	auto copyRightVal = rat;
@@ -101,24 +92,14 @@ CRational const CRational::operator -(CRational const &rat) const
 	auto mostLarDiv = GCD(copyLeftVal.first, copyLeftVal.second);
 	return { copyLeftVal.first / int(mostLarDiv), copyLeftVal.second / int(mostLarDiv) };
 }
-
-
-//////////////////////////////////////////////////////////////////////////
-// TODO: 5. Реализовать оператор +=
-//////////////////////////////////////////////////////////////////////////
-
+//5
 void const CRational::operator +=(CRational const &rat) 
 {
 	auto res = CRational(m_numerator, m_denominator) + rat;
 	m_numerator = res.m_numerator;
 	m_denominator = res.m_denominator;
 }
-
-
-//////////////////////////////////////////////////////////////////////////
-// TODO: 6. Реализовать оператор -=
-//////////////////////////////////////////////////////////////////////////
-
+//6
 void const CRational::operator -=(CRational const &rat)
 {
 	auto res = CRational(m_numerator, m_denominator) - rat;
@@ -126,11 +107,7 @@ void const CRational::operator -=(CRational const &rat)
 	m_denominator = res.m_denominator;
 }
 
-
-//////////////////////////////////////////////////////////////////////////
-// TODO: 7. Реализовать оператор *
-//////////////////////////////////////////////////////////////////////////
-
+//7
 CRational const operator *(CRational const &rat1, CRational const &rat2)
 {
 	auto copyRightVal = rat1;
@@ -140,12 +117,7 @@ CRational const operator *(CRational const &rat1, CRational const &rat2)
 	auto mostLarDiv = GCD(copyRightVal.m_numerator, copyRightVal.m_denominator);
 	return CRational(copyRightVal.m_numerator / int(mostLarDiv), copyRightVal.m_denominator / int(mostLarDiv));
 }
-
-//////////////////////////////////////////////////////////////////////////
-// TODO: 8. Реализовать оператор /
-//////////////////////////////////////////////////////////////////////////
-
-
+//8
 CRational const CRational::operator /(CRational const &rat) const
 {
 	auto copy = std::pair<int, int>(m_numerator, m_denominator);
@@ -164,25 +136,13 @@ CRational const operator /(CRational const &rat, int t)
 {
 	return CRational(rat.m_numerator, rat.m_denominator * t);
 }
-
-
-//////////////////////////////////////////////////////////////////////////
-// TODO: 9. Реализовать оператор *=
-//////////////////////////////////////////////////////////////////////////
-
+//9
 void const CRational::operator *=(CRational const &rat)
 {
-	auto res = CRational(m_numerator, m_denominator) * rat;
-	m_numerator = res.m_numerator;
-	m_denominator = res.m_denominator;
+	*this = *this * rat;
 }
 
-
-
-//////////////////////////////////////////////////////////////////////////
-// TODO: 10. Реализовать оператор /=
-//////////////////////////////////////////////////////////////////////////
-
+//10
 void const CRational::operator /=(CRational const &rat)
 {
 	auto res = CRational(m_numerator, m_denominator) / rat;
@@ -191,9 +151,7 @@ void const CRational::operator /=(CRational const &rat)
 }
 
 
-//////////////////////////////////////////////////////////////////////////
-// TODO: 11. Реализовать операторы == и !=
-//////////////////////////////////////////////////////////////////////////
+//11
 bool const CRational::operator ==(CRational const &rat) const
 {
 	return (m_numerator == rat.m_numerator && m_denominator == rat.m_denominator);
@@ -204,19 +162,16 @@ bool const CRational::operator !=(CRational const &rat) const
 	return (m_numerator != rat.m_numerator || m_denominator != rat.m_denominator);
 }
 
-
-//////////////////////////////////////////////////////////////////////////
-// TODO: 12. Реализовать операторы <, >, <=, >=
-//////////////////////////////////////////////////////////////////////////
+//12
 bool const CRational::operator <(CRational const &rat) const
 {
 	auto copyRightVal = rat;
-	auto copyLeftVal = *this;//std::pair<int, int>(m_numerator, m_denominator);
+	auto copyLeftVal = std::pair<int, int>(m_numerator, m_denominator);
 	copyRightVal.m_numerator *= m_denominator;
 	copyRightVal.m_denominator *= m_denominator;
-	copyLeftVal.m_numerator *= copyRightVal.m_denominator / copyLeftVal.m_denominator;
-	copyLeftVal.m_denominator *= copyRightVal.m_denominator / copyLeftVal.m_denominator;
-	return copyLeftVal.m_numerator < copyRightVal.m_numerator;
+	copyLeftVal.first *= copyRightVal.m_denominator / copyLeftVal.second;
+	copyLeftVal.second *= copyRightVal.m_denominator / copyLeftVal.second;
+	return copyLeftVal.first < copyRightVal.m_numerator;
 }
 
 bool const CRational::operator >(CRational const &rat) const
@@ -251,29 +206,30 @@ bool const CRational::operator >=(CRational const &rat) const
 	copyLeftVal.second *= copyRightVal.m_denominator / copyLeftVal.second;
 	return copyLeftVal.first >= copyRightVal.m_numerator;
 }
-//////////////////////////////////////////////////////////////////////////
-// TODO: 13. Реализовать оператор вывода рационального числа в выходной поток 
-//////////////////////////////////////////////////////////////////////////
-
-
+//13
 std::ostream& operator << (std::ostream &os, CRational const &rat)
 {
-	return os << rat.m_numerator << "/" << rat.m_denominator;
+	return os << rat.GetNumerator() << "/" << rat.GetDenominator();
 }
 
-
-//////////////////////////////////////////////////////////////////////////
-// TODO: 14. Реализовать оператор ввода рационального числа из входного потока 
-//////////////////////////////////////////////////////////////////////////
-
-
-/*std::istream& operator >> (std::istream &is, CRational &rat)
+//14
+std::istream & operator >> (std::istream & strm, CRational & rational)
 {
-	std::string str;
-	is >> str;
-	std::vector<std::string> vec;
-	boost::split(vec, str, boost::is_any_of("/"));
-	rat.m_numerator = atoi(vec[0].c_str());
-	rat.m_denominator = atoi(vec[1].c_str());
-	return is;
-}*/
+	std::streamoff startPos = strm.tellg();
+	int numerator;
+	int denominator;
+	if ((strm >> numerator) && (strm.get() == '/') && (strm >> denominator))
+	{
+		rational = CRational(numerator, denominator);
+		return strm;
+	}
+	strm.seekg(startPos);
+	return strm;
+}
+
+std::pair<int, CRational> CRational::ToCompoundFraction()const
+{
+	int value = static_cast<int>(ToDouble());
+	int numerator = m_numerator - m_denominator * value;
+	return std::make_pair<int, CRational>(std::move(value), CRational(numerator, m_denominator));
+}
