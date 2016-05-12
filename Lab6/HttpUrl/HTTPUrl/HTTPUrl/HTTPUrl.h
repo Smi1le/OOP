@@ -1,6 +1,7 @@
 #pragma once
 #include "UrlParsingError.h"
-
+#include <boost/utility/string_ref.hpp>
+#include <iostream>
 
 
 class CHttpUrl
@@ -19,7 +20,7 @@ public:
 		std::string const& domain,
 		std::string const& document,
 		Protocol protocol = Protocol::HTTP,
-		unsigned short port = 80);
+		unsigned short port = 80u);
 
 	// возвращает строковое представление URL-а. Порт, являющийся стандартным для
 	// выбранного протокола (80 для http и 443 для https) в URL не должен включаться
@@ -40,6 +41,14 @@ public:
 
 	std::string ValidDomainName(std::string const &domain);
 	std::string ValidDocumentName(std::string const &domain);
+	void ParseUrl(std::string const &url);
+	Protocol CheckProtocol(boost::string_ref const &protocol, int &index) const;
+	std::string ParseDomainName(boost::string_ref const &url, int &index);
+	unsigned short ParsePort(boost::string_ref const &url, size_t index) const;
+	int GetIndexStartDomainName(boost::string_ref const &url, int index = 0) const;
+
+	std::string ToStringProtocol() const;
+	std::string ToStringPort() const;
 
 private:
 	std::string m_domain;
