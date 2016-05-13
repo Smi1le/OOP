@@ -64,67 +64,37 @@ CRational const CRational::operator+() const
 	return *this;
 }
 
-
 //3
 CRational const CRational::operator +(CRational const &rat) const
 {
-	auto copyRightVal = rat;
-	auto copyLeftVal = std::pair<int, int>(m_numerator, m_denominator);
-	copyRightVal.m_numerator *= m_denominator;
-	copyRightVal.m_denominator *= m_denominator;
-	copyLeftVal.first *= copyRightVal.m_denominator / copyLeftVal.second;
-	copyLeftVal.second *= copyRightVal.m_denominator / copyLeftVal.second;
-	copyLeftVal.first += copyRightVal.m_numerator;
-	auto mostLarDiv = GCD(copyLeftVal.first, copyLeftVal.second);
-	return{ copyLeftVal.first / int(mostLarDiv), copyLeftVal.second / int(mostLarDiv) };
+	return CRational(m_numerator * rat.m_denominator + rat.m_numerator * m_denominator, rat.m_denominator * m_denominator);
 }
 
 //4
 CRational const CRational::operator -(CRational const &rat) const
 {
-	auto copyRightVal = rat;
-	auto copyLeftVal = std::pair<int, int>(m_numerator, m_denominator);
-	copyRightVal.m_numerator *= m_denominator;
-	copyRightVal.m_denominator *= m_denominator;
-	copyLeftVal.first *= copyRightVal.m_denominator / copyLeftVal.second;
-	copyLeftVal.second *= copyRightVal.m_denominator / copyLeftVal.second;
-	copyLeftVal.first -= copyRightVal.m_numerator;
-	auto mostLarDiv = GCD(copyLeftVal.first, copyLeftVal.second);
-	return { copyLeftVal.first / int(mostLarDiv), copyLeftVal.second / int(mostLarDiv) };
+	return *this + -rat;
 }
 //5
 void const CRational::operator +=(CRational const &rat) 
 {
-	auto res = CRational(m_numerator, m_denominator) + rat;
-	m_numerator = res.m_numerator;
-	m_denominator = res.m_denominator;
+	*this = *this + rat;
 }
 //6
 void const CRational::operator -=(CRational const &rat)
 {
-	auto res = CRational(m_numerator, m_denominator) - rat;
-	m_numerator = res.m_numerator;
-	m_denominator = res.m_denominator;
+	*this = *this - rat;
 }
 
 //7
-CRational const operator *(CRational const &rat1, CRational const &rat2)
+CRational const operator *(CRational rat1, CRational const &rat2)
 {
-	auto copyRightVal = rat1;
-	//auto copyLeftVal = std::pair<int, int>(m_numerator, m_denominator);
-	copyRightVal.m_numerator *= rat2.m_numerator;
-	copyRightVal.m_denominator *= rat2.m_denominator;
-	auto mostLarDiv = GCD(copyRightVal.m_numerator, copyRightVal.m_denominator);
-	return CRational(copyRightVal.m_numerator / int(mostLarDiv), copyRightVal.m_denominator / int(mostLarDiv));
+	return CRational(rat1.m_numerator * rat2.m_numerator, rat1.m_denominator * rat2.m_denominator);
 }
 //8
 CRational const CRational::operator /(CRational const &rat) const
 {
-	auto copy = std::pair<int, int>(m_numerator, m_denominator);
-	copy.first *= rat.m_denominator;
-	copy.second *= rat.m_numerator;
-	auto mostLarDiv = GCD(copy.first, copy.second);
-	return CRational(copy.first / int(mostLarDiv), copy.second / int(mostLarDiv));
+	return CRational(m_numerator * rat.m_denominator, m_denominator * rat.m_numerator);
 }
 
 CRational const operator /(int t, CRational const &rat)
@@ -145,9 +115,7 @@ void const CRational::operator *=(CRational const &rat)
 //10
 void const CRational::operator /=(CRational const &rat)
 {
-	auto res = CRational(m_numerator, m_denominator) / rat;
-	m_numerator = res.m_numerator;
-	m_denominator = res.m_denominator;
+	*this = *this / rat;
 }
 
 
@@ -159,52 +127,28 @@ bool const CRational::operator ==(CRational const &rat) const
 
 bool const CRational::operator !=(CRational const &rat) const
 {
-	return (m_numerator != rat.m_numerator || m_denominator != rat.m_denominator);
+	return !(*this == rat);
 }
 
 //12
 bool const CRational::operator <(CRational const &rat) const
 {
-	auto copyRightVal = rat;
-	auto copyLeftVal = std::pair<int, int>(m_numerator, m_denominator);
-	copyRightVal.m_numerator *= m_denominator;
-	copyRightVal.m_denominator *= m_denominator;
-	copyLeftVal.first *= copyRightVal.m_denominator / copyLeftVal.second;
-	copyLeftVal.second *= copyRightVal.m_denominator / copyLeftVal.second;
-	return copyLeftVal.first < copyRightVal.m_numerator;
+	return m_numerator * rat.m_denominator < rat.m_numerator * m_denominator;
 }
 
 bool const CRational::operator >(CRational const &rat) const
 {
-	auto copyRightVal = rat;
-	auto copyLeftVal = std::pair<int, int>(m_numerator, m_denominator);
-	copyRightVal.m_numerator *= m_denominator;
-	copyRightVal.m_denominator *= m_denominator;
-	copyLeftVal.first *= copyRightVal.m_denominator / copyLeftVal.second;
-	copyLeftVal.second *= copyRightVal.m_denominator / copyLeftVal.second;
-	return copyLeftVal.first > copyRightVal.m_numerator;
+	return !(*this < rat) && (*this != rat);
 }
 
 bool const CRational::operator <=(CRational const &rat) const
 {
-	auto copyRightVal = rat;
-	auto copyLeftVal = std::pair<int, int>(m_numerator, m_denominator);
-	copyRightVal.m_numerator *= m_denominator;
-	copyRightVal.m_denominator *= m_denominator;
-	copyLeftVal.first *= copyRightVal.m_denominator / copyLeftVal.second;
-	copyLeftVal.second *= copyRightVal.m_denominator / copyLeftVal.second;
-	return copyLeftVal.first <= copyRightVal.m_numerator;
+	return (*this < rat) || (*this == rat);
 }
 
 bool const CRational::operator >=(CRational const &rat) const
 {
-	auto copyRightVal = rat;
-	auto copyLeftVal = std::pair<int, int>(m_numerator, m_denominator);
-	copyRightVal.m_numerator *= m_denominator;
-	copyRightVal.m_denominator *= m_denominator;
-	copyLeftVal.first *= copyRightVal.m_denominator / copyLeftVal.second;
-	copyLeftVal.second *= copyRightVal.m_denominator / copyLeftVal.second;
-	return copyLeftVal.first >= copyRightVal.m_numerator;
+	return (*this == rat) || (*this > rat);
 }
 //13
 std::ostream& operator << (std::ostream &os, CRational const &rat)
@@ -230,6 +174,5 @@ std::istream & operator >> (std::istream & strm, CRational & rational)
 std::pair<int, CRational> CRational::ToCompoundFraction()const
 {
 	int value = static_cast<int>(ToDouble());
-	int numerator = m_numerator - m_denominator * value;
-	return std::make_pair<int, CRational>(std::move(value), CRational(numerator, m_denominator));
+	return std::make_pair<int, CRational>(std::move(value), CRational(m_numerator - m_denominator * value, m_denominator));
 }

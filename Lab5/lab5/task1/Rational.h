@@ -107,7 +107,7 @@ public:
 	//	(7*2) / 3     = (14/3)
 	//////////////////////////////////////////////////////////////////////////
 
-	friend CRational const operator *(CRational const &rat1, CRational const &rat2);
+	friend CRational const operator *(CRational rat1, CRational const &rat2);
 	/*friend CRational const operator *(int t, CRational const &rat);
 	friend CRational const operator *(CRational const &rat, int t);*/
 

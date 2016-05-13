@@ -16,7 +16,12 @@ BOOST_AUTO_TEST_CASE(Test_Greates_Common_Denominator)
 	BOOST_CHECK_EQUAL(GCD(0, 0), 1u);
 }
 
+template <typename T>
 
+bool CheckTwoValues(T first, T second)
+{
+	return abs(static_cast<double>(first) - static_cast<double>(second)) < 0.1f ? true : false;
+}
 
 /*
   Рациональное число:
@@ -28,9 +33,9 @@ BOOST_AUTO_TEST_CASE(Test_Greates_Common_Denominator)
 
 void VerifyRational(const CRational & r, int expectedNumerator, int expectedDenominator)
 {
-	std::cout << "expectedNumerator = " << expectedNumerator << std::endl;
+	/*std::cout << "expectedNumerator = " << expectedNumerator << std::endl;
 	std::cout << "expectedDenominator = " << expectedDenominator << std::endl;
-	std::cout << "------------------------------------------ = " << std::endl;
+	std::cout << "------------------------------------------ = " << std::endl;*/
 	BOOST_CHECK_EQUAL(r.GetNumerator(), expectedNumerator);
 	BOOST_CHECK_EQUAL(r.GetDenominator(), expectedDenominator);
 }
@@ -77,7 +82,7 @@ BOOST_AUTO_TEST_SUITE(Rational_number)
 	BOOST_AUTO_TEST_CASE(to_double)
 	{
 		CRational r1(3, 5);
-		BOOST_CHECK_EQUAL(r1.ToDouble(), 0.6f);
+		BOOST_CHECK(CheckTwoValues(r1.ToDouble(), 0.6));
 	}
 
 
@@ -103,8 +108,8 @@ BOOST_AUTO_TEST_SUITE(Rational_number)
 	{
 		CRational r1(3, 5);
 		CRational r2 = -r1;
-		BOOST_CHECK_EQUAL(r2.GetNumerator(), -3);
-		BOOST_CHECK_EQUAL(r2.GetDenominator(), 5);
+		BOOST_CHECK(CheckTwoValues(r2.GetNumerator(), -3));
+		BOOST_CHECK(CheckTwoValues(r2.GetDenominator(), 5));
 	}
 
 	BOOST_AUTO_TEST_CASE(unary_plus)
@@ -112,8 +117,8 @@ BOOST_AUTO_TEST_SUITE(Rational_number)
 		CRational r1(3, 5);
 		CRational r2 = -r1;
 		CRational r3 = +r2;
-		BOOST_CHECK_EQUAL(r3.GetNumerator(), -3);
-		BOOST_CHECK_EQUAL(r3.GetDenominator(), 5);
+		BOOST_CHECK(CheckTwoValues(r3.GetNumerator(), -3));
+		BOOST_CHECK(CheckTwoValues(r3.GetDenominator(), 5));
 	}
 
 
