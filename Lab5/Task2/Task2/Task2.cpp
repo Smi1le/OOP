@@ -6,7 +6,11 @@
 
 int main()
 {
-	CMyString str;
+	std::string str1 = "someString";
+	std::string str2 = " kakawka";
+	CMyString str(str1 + str2);
+	CMyString strr("ssssss");
+	strr.Display();
 	str.Display();
     return 0;
 }
