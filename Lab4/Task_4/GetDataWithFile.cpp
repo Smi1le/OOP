@@ -9,7 +9,7 @@
 
 using namespace std;
 
-dataShapes DownloadTheFile(std::string const &nameInputFile)
+dataShapes ReadFromFile(std::string const &nameInputFile)
 {
 	ifstream inputFile(nameInputFile);
 	string command;

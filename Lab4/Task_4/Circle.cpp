@@ -14,7 +14,12 @@ CCircle::CCircle(Point const &p1, float radius, Color const &edgeColor, Color co
 	, m_radius(radius)
 	, m_edgeColor(edgeColor)
 	, m_fillColor(fillColor)
-{}
+{
+	if (radius > 0.f)
+	{
+
+	}
+}
 
 Color CCircle::GetLineColor() const
 {

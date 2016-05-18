@@ -2,10 +2,9 @@
 #include "SolidShape.h"
 #include "Point.h"
 
-class CCircle : public ISolidShape
+class CCircle final : public ISolidShape
 {
 public:
-	//move to cpp
 	CCircle(Point const &p1, float radius, Color const &edgeColor, Color const &fillColor);
 	Color GetLineColor() const override;
 	std::string GetDescription()const override;

@@ -31,7 +31,7 @@ void OutputDataInSortedOrder(std::vector<std::shared_ptr<IShape>> &parameterShap
 int main()
 {
 	std::string name = "input.txt";
-	auto elements = DownloadTheFile(name);
+	auto elements = ReadFromFile(name);
 	std::vector<std::shared_ptr<IShape>> parametersShapes;
 	for (auto element : elements)
 	{

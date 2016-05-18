@@ -5,7 +5,7 @@ int main()
 {
 	std::string name = "input.txt";
 	CShapesController shapes;
-	shapes.CreateElements(DownloadTheFile(name));
+	shapes.CreateElements(ReadFromFile(name));
 	shapes.DisplayShapes();
 	return 0;
 }

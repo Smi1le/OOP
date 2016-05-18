@@ -2,7 +2,7 @@
 #include "Shape.h"
 #include "Point.h"
 
-class CLineSegment : public IShape
+class CLineSegment final : public IShape
 {
 public:
 	CLineSegment(Point const &p1, Point const &p2, Color const &color);

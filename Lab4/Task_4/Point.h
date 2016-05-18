@@ -1,7 +1,7 @@
 #pragma once
 #include "Shape.h"
 
-class CPoint : public IShape
+class CPoint final : public IShape
 {
 public:
 	CPoint(Point const &p, Color const &edgeColor);

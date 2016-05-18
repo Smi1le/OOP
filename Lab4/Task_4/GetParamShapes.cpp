@@ -8,35 +8,35 @@ std::shared_ptr<IShape> CreateShape(std::vector<std::string> const &element)
 	std::shared_ptr<IShape> shape;
 	if (name == POINT)
 	{
-		if (IsCreatePoint(element, shape))
+		if (CreatePoint(element, shape))
 		{
 			return shape;
 		}
 	}
 	else if (name == LINE_SEGMENT)
 	{
-		if (IsCreateLineSegment(element, shape))
+		if (CreateLineSegment(element, shape))
 		{
 			return shape;
 		}
 	}
 	else if (name == RECTANGLE)
 	{
-		if (IsCreateRectangle(element, shape))
+		if (CreateRectangle(element, shape))
 		{
 			return shape;
 		}
 	}
 	else if (name == TRIANGLE)
 	{
-		if (IsCreateTriangle(element, shape))
+		if (CreateTriangle(element, shape))
 		{
 			return shape;
 		}
 	}
 	else //This Circle!!
 	{
-		if (IsCreateCircle(element, shape))
+		if (CreateCircle(element, shape))
 		{
 			return shape;
 		}
@@ -59,7 +59,7 @@ bool CreateColor(Color &color, std::string const &colorString)
 	return false;
 }
 
-bool IsCreatePoint(std::vector<std::string> const &element, std::shared_ptr<IShape> &shape)
+bool CreatePoint(std::vector<std::string> const &element, std::shared_ptr<IShape> &shape)
 {
 	Point p = { static_cast<float>(atof(element[1].c_str())), static_cast<float>(atof(element[2].c_str())) };
 	Color color = Color();
@@ -72,7 +72,7 @@ bool IsCreatePoint(std::vector<std::string> const &element, std::shared_ptr<ISha
 	return false;
 }
 
-bool IsCreateLineSegment(std::vector<std::string> const &element, std::shared_ptr<IShape> &shape)
+bool CreateLineSegment(std::vector<std::string> const &element, std::shared_ptr<IShape> &shape)
 {
 	Point p1 = { static_cast<float>(atof(element[1].c_str())), static_cast<float>(atof(element[2].c_str())) };
 	Point p2 = { static_cast<float>(atof(element[3].c_str())), static_cast<float>(atof(element[4].c_str())) };
@@ -86,7 +86,7 @@ bool IsCreateLineSegment(std::vector<std::string> const &element, std::shared_pt
 	return false;
 }
 
-bool IsCreateRectangle(std::vector<std::string> const &element, std::shared_ptr<IShape> &shape)
+bool CreateRectangle(std::vector<std::string> const &element, std::shared_ptr<IShape> &shape)
 {
 	Point p1 = { static_cast<float>(atof(element[1].c_str())), static_cast<float>(atof(element[2].c_str())) };
 	Point p2 = { static_cast<float>(atof(element[3].c_str())), static_cast<float>(atof(element[4].c_str())) };
@@ -102,7 +102,7 @@ bool IsCreateRectangle(std::vector<std::string> const &element, std::shared_ptr<
 	return false;
 }
 
-bool IsCreateTriangle(std::vector<std::string> const &element, std::shared_ptr<IShape> &shape)
+bool CreateTriangle(std::vector<std::string> const &element, std::shared_ptr<IShape> &shape)
 {
 	Point p1 = { static_cast<float>(atof(element[1].c_str())), static_cast<float>(atof(element[2].c_str())) };
 	Point p2 = { static_cast<float>(atof(element[3].c_str())), static_cast<float>(atof(element[4].c_str())) };
@@ -119,7 +119,7 @@ bool IsCreateTriangle(std::vector<std::string> const &element, std::shared_ptr<I
 	return false;
 }
 
-bool IsCreateCircle(std::vector<std::string> const &element, std::shared_ptr<IShape> &shape)
+bool CreateCircle(std::vector<std::string> const &element, std::shared_ptr<IShape> &shape)
 {
 	Point p1 = { static_cast<float>(atof(element[1].c_str())), static_cast<float>(atof(element[2].c_str())) };
 	float radius = static_cast<float>(atof(element[3].c_str()));
@@ -135,6 +135,7 @@ bool IsCreateCircle(std::vector<std::string> const &element, std::shared_ptr<ISh
 	return false;
 }
 
+//use std::sort - yes
 void SortVectorForArea(std::vector<std::shared_ptr<IShape>> &parameterShapes)
 {
 	std::sort(parameterShapes.begin(), parameterShapes.end(), [](std::shared_ptr<IShape> l, std::shared_ptr<IShape> r) {

@@ -3,7 +3,7 @@
 #include "Point.h"
 #include <memory>
 
-class CRectangle : public ISolidShape
+class CRectangle final : public ISolidShape
 {
 public:
 	//move construction to .cpp - yes

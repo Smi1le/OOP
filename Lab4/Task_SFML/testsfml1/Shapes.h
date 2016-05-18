@@ -17,6 +17,15 @@ public:
 	void GetAngle() const;
 };
 
+class CTriangleView: public sf::Drawable
+{
+public:
+	//CTriangleView(CTriangle const& model);
+
+protected:
+	//void draw(...) override;
+};
+
 
 class CShapesModel
 {

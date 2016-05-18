@@ -2,7 +2,7 @@
 #include "SolidShape.h"
 #include "Point.h"
 
-class CTriangle : public ISolidShape
+class CTriangle final : public ISolidShape
 {
 public:
 	CTriangle(Point const &p1, Point const &p2, Point const &p3, Color const &edgeColor, Color const &fillColor);
@@ -19,10 +19,7 @@ private:
 	float GetSecondSideLength() const;
 	float GetThirdSideLength() const;
 
-	//implement to array[] or vector
-	Point m_firstPoint;
-	Point m_secondPoint;
-	Point m_thirdPoint;
+	std::vector<Point> m_points;
 	
 	
 	Color m_edgeColor;
