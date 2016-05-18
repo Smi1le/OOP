@@ -1,11 +1,12 @@
 #include "stdafx.h"
 #include "MyString.h"
 #include <iostream>
+#include <algorithm>
 
 
 CMyString::CMyString()
 	: m_length(0)
-	, m_chars(new char(1))
+	, m_chars(new char[1])
 {
 	m_chars[0] = '\0';
 }
@@ -25,8 +26,11 @@ CMyString::CMyString(CMyString const& other)
 }
 
 CMyString::CMyString(CMyString && other)
-	//: m_chars(other.m_chars)
+	: m_chars(new char[1])
+	, m_length(0)
 {
+	m_chars[0] = '\0';
+	// TODO: initialize before assign
 	*this = std::move(other);
 }
 
@@ -60,7 +64,10 @@ void CMyString::StringCopy(const char * pString, size_t length)
 
 CMyString const CMyString::SubString(size_t start, size_t length) const
 {
-	assert(start <= m_length);
+	if (start <= m_length)
+	{
+		std::out_of_range("out of range");
+	}
 	if (!m_chars)
 	{
 		return CMyString("");
@@ -75,7 +82,7 @@ CMyString const CMyString::SubString(size_t start, size_t length) const
 void CMyString::Clear()
 {
 	delete[]m_chars;
-	m_chars = new char(1);
+	m_chars = new char[1]; // can throw std::bad_alloc
 	m_chars[0] = '\0';
 	m_length = 0;
 }
@@ -91,9 +98,11 @@ CMyString const CMyString::operator=(CMyString && str)
 	if (m_chars != str.m_chars)
 	{
 		std::swap(m_chars, str.m_chars);
+
 		m_length = str.m_length;
 		delete[] str.m_chars;
-		str.m_chars = nullptr;
+		str.m_chars = new char[1];
+		str.m_chars[0] = '\0';
 		str.m_length = 0;
 	}
 	return *this;
@@ -127,18 +136,8 @@ CMyString const operator+(CMyString const &str1, CMyString const &str2)
 //Оператор сравнения
 bool const operator==(CMyString const &str1, CMyString const &str2)
 {
-	if (str1.m_length != str2.m_length)
-	{
-		return false;
-	}
-	for (size_t i = 0; i != str1.m_length; ++i)
-	{
-		if (str1.m_chars[i] != str2.m_chars[i])
-		{
-			return false;
-		}
-	}
-	return true;
+	return std::equal(str1.m_chars, str1.m_chars + str1.m_length, 
+		str2.m_chars, str2.m_chars + str2.m_length);
 }
 
 bool const operator!=(CMyString const &str1, CMyString const &str2)
@@ -154,7 +153,6 @@ CMyString & operator+=(CMyString &str1, CMyString const &str2)
 		char *temp = new char[str2.m_length + str1.GetLength() + 1];
 		memcpy(temp, str1.GetStringData(), str1.m_length);
 		memcpy(&temp[str1.m_length], str2.GetStringData(), str2.GetLength());
-
 		delete[] str1.m_chars;
 		str1.m_chars = temp;
 		str1.m_length += str2.GetLength();
@@ -165,25 +163,19 @@ CMyString & operator+=(CMyString &str1, CMyString const &str2)
 
 const char &CMyString::operator[](size_t pos) const
 {
-	if (pos > m_length)
+	if (pos >= m_length)
 	{
-		throw(std::out_of_range("out of range"));
+		throw std::out_of_range("out of range");
 	}
 	return m_chars[pos];
 }
 
 char &CMyString::operator[](size_t pos)
 {
-	if (pos >= m_length && pos != 0)
+	if (pos >= m_length)
 	{
 		throw std::out_of_range("Index out of range.");
 	}
-	else if (!m_chars)
-	{
-		m_chars = new char[2];
-		m_chars[1] = '\0';
-	}
-
 	return m_chars[pos];
 }
 

@@ -163,6 +163,7 @@ BOOST_AUTO_TEST_SUITE(concatenation_operator)
 		VerifyString(addStr, 23u, "first valuesecond value");
 	}
 
+
 BOOST_AUTO_TEST_SUITE_END()
 
 
@@ -355,6 +356,9 @@ BOOST_AUTO_TEST_SUITE(indexed_access_operator)
 		CMyString str("get the string data");
 		str[5] = 'f';
 		str[18] = 'd';
+		const CMyString &strRef = str;
+		BOOST_CHECK_THROW((strRef[strRef.GetLength()] == 'f'), std::out_of_range);
+		BOOST_CHECK_THROW(str[str.GetLength()] = 'f', std::out_of_range);
 		BOOST_CHECK(str[18] == 'd');
 		BOOST_CHECK(str[5] == 'f');
 		BOOST_CHECK_EQUAL(str.GetStringData(), "get tfe string datd");

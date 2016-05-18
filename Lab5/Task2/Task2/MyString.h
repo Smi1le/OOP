@@ -17,6 +17,7 @@ public:
 
 	size_t GetLength()const;
 
+	// FIXME: Returns nullptr in some cases
 	const char* GetStringData()const;
 
 	CMyString const SubString(size_t start, size_t length = SIZE_MAX)const;

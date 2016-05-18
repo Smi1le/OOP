@@ -35,10 +35,10 @@
     <ClCompile Include="Task2Test.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="Tests.cpp">
+    <ClCompile Include="..\Task2\MyString.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="..\Task2\MyString.cpp">
+    <ClCompile Include="MyString_Tests.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
   </ItemGroup>
