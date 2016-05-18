@@ -332,15 +332,30 @@ BOOST_AUTO_TEST_SUITE(Rational_number)
 //	std::istream в формате <числитель>/<знаменатель>, 
 //	например: 7/15
 //////////////////////////////////////////////////////////////////////////
-	BOOST_AUTO_TEST_CASE(entry_operator)
+	
+
+// во время тестов не должно требоваться взаимодействие с пользователем https://github.com/Smi1le/OOP/issues/11
+
+
+//////////////////////////////////////////////////////////////////////////
+// TODO: Дополнительное задание ToCompoundFactor
+//	Например 9/4 = 2(1/4)
+//			 15/3 = 5(0/1)
+//////////////////////////////////////////////////////////////////////////
+
+	bool const operator ==(std::pair<int, CRational> const & l, std::pair<int, CRational> const &r)
 	{
-		CRational rat3;
-		CRational rat4;
-		std::cin >> rat3;
-		std::cin >> rat4;
-		std::cout << rat3;
-		std::cout << rat4;
+		return (l.first == r.first) && (l.second == r.second);
 	}
 
+	BOOST_AUTO_TEST_CASE(method_ToCompoundFactor)
+	{
+		
+		CRational number(9, 4);
+		BOOST_CHECK(std::make_pair(2, CRational(1, 4)) == number.ToCompoundFraction());
+		CRational number2(15, 3);
+		BOOST_CHECK(std::make_pair(5, CRational(0, 1)) == number2.ToCompoundFraction());
+
+	}
 
 BOOST_AUTO_TEST_SUITE_END()
