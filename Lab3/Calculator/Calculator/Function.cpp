@@ -2,21 +2,6 @@
 #include "Function.h"
 #include "FunctionContext.h"
 
-
-
-void CFunction::SetElement(std::string const &value, int numberItem)
-{
-	if (numberItem == 1)
-	{
-		m_firstVar = value;
-	}
-	if (numberItem == 2)
-	{
-		m_isTwoOperand = true;
-		m_secondVar = value;
-	}
-}
-
 bool CFunction::IsTwoOperand() const
 {
 	return m_isTwoOperand;
@@ -33,12 +18,28 @@ std::string CFunction::GetElement(int number) const
 
 double CFunction::Calculate(IFunctionContext *ctx)
 {
-	return ctx->Calculate(m_firstVar, m_secondVar, m_operand, m_isTwoOperand);
+	if (m_isTwoOperand)
+	{
+		return CalcValTwoVar(m_operation, ctx->Calculate(m_firstVar), ctx->Calculate(m_secondVar));
+	}
+	return ctx->Calculate(m_firstVar);
 }
 
-void CFunction::SetOperand(TypeOperand const &op)
+
+
+double CFunction::CalcValTwoVar(TypeOperand operation, double firstVal, double secondVal) const
 {
-	m_operand = op;
-	m_isTwoOperand = true;
+	if (operation == TypeOperand::multiplication)
+	{
+		return firstVal * secondVal;
+	}
+	if (operation == TypeOperand::substraction)
+	{
+		return firstVal - secondVal;
+	}
+	if (operation == TypeOperand::addition)
+	{
+		return firstVal + secondVal;
+	}
+	return firstVal / secondVal;
 }
-

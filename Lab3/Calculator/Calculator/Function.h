@@ -9,23 +9,23 @@ class IFunctionContext;
 class CFunction
 {
 public:
-	CFunction() = default;
-	CFunction(std::string const &tFirstVal, std::string const &tSecondVal = "", TypeOperand tOperand = TypeOperand::addition)
-		: m_firstVar(tFirstVal)
-		, m_secondVar(tSecondVal)
-		, m_operand(tOperand)
+	CFunction(std::string const &firstVal)
+		: m_firstVar(firstVal)
 	{}
-	~CFunction() = default;
+	CFunction(std::string const &firstVal, std::string const &secondVal, TypeOperand operand)
+		: m_firstVar(firstVal)
+		, m_secondVar(secondVal)
+		, m_operation(operand)
+	{
+		m_isTwoOperand = true;
+	}
 	double Calculate(IFunctionContext *ctx);
-	void SetElement(std::string const &value, int numberItem);
-	void SetOperand(TypeOperand const &op);
 	bool IsTwoOperand() const;
 	std::string GetElement(int number)const;
+private:
+	double CalcValTwoVar(TypeOperand operation, double firstVal, double secondVal) const;
 	std::string m_firstVar;
 	std::string m_secondVar;
-private:
-	
-	
-	TypeOperand m_operand;
+	TypeOperand m_operation;
 	bool m_isTwoOperand = false;
 };

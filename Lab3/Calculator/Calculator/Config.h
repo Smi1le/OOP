@@ -4,7 +4,7 @@
 #include <map>
 
 static const std::string ADD_VAR = "var";
-static const std::string ASS_VALUES_TO_VAR = "let";
+static const std::string ASSIGN_VALUES_TO_VAR = "let";
 static const std::string ADD_FUNCTION = "fn";
 static const std::string PRINT = "print";
 static const std::string PRINT_VARS = "printvars";

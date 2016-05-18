@@ -185,6 +185,7 @@
     <ClCompile Include="..\Calculator\CCalculatorHelper.cpp" />
     <ClCompile Include="..\Calculator\Function.cpp" />
     <ClCompile Include="..\Calculator\FunctionContext.cpp" />
+    <ClCompile Include="..\Calculator\Task_3_calc.cpp" />
     <ClCompile Include="Calc_Tests.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

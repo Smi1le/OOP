@@ -78,17 +78,16 @@ bool CCalculator::AddFunction(Vector const &inst)
 	{
 		return false;
 	}
-	CFunction pData;
 	string firstName = inst[NUMBER_POS_FIRST_NAME];
-	pData.SetElement(firstName, 1);
+	CFunction data = CFunction(firstName);
 	if (inst.size() > 5)
 	{
 		string operation = inst[NUMBER_POS_OPER];
 		string secondName = inst[NUMBER_POS_SEC_NAME];
-		pData.SetOperand(CheckOperand(operation));
-		pData.SetElement(secondName, 2);
+		data = CFunction(firstName, secondName, CheckOperand(operation));
+		
 	}
-	m_functions.insert({ nameFunc, pData });
+	m_functions.insert({ nameFunc, data });
 	return true;
 	
 }
@@ -139,12 +138,11 @@ double CCalculator::GetValue(string const &var)
 	auto element1 = m_functions.find(var);
 	if (element1 != m_functions.end())
 	{
-		//IFunctionContext ctx(m_functions, m_variables);
 		return (*element1).second.Calculate(this);
 	}
 }
 
-bool CCalculator::IsNumber(string const &val) const
+static bool IsNumber(string const &val)
 {
 	for (auto elem : val) {
 		if (!isdigit(elem) && elem != '.')
@@ -183,51 +181,17 @@ bool CCalculator::GetValueVariable(std::string const &var, double &number)
 	return false;
 }
 
-double CCalculator::CalcValTwoVar(TypeOperand operation, double firstVal, double secondVal) const
+double CCalculator::Calculate(std::string const &variable)
 {
-	if (operation == TypeOperand::multiplication)
+	if (!IsNumber(variable))
 	{
-		return firstVal * secondVal;
+		double valFirstVal = 0;
+		GetValueVariable(variable, valFirstVal);
+		return valFirstVal;
 	}
-	if (operation == TypeOperand::substraction)
+	else
 	{
-		return firstVal - secondVal;
-	}
-	if (operation == TypeOperand::addition)
-	{
-		return firstVal + secondVal;
-	}
-	return firstVal / secondVal;
-}
-
-double CCalculator::Calculate(std::string const &leftVar, std::string const &rightVar, TypeOperand const &op, bool twoOp)
-{
-	if (twoOp)
-	{
-		double valFirstVar = 0;
-		double valSecondVar = 0;
-		if (!IsNumber(leftVar))
-		{
-			GetValueVariable(leftVar, valFirstVar);
-		}
-		else
-		{
-			valFirstVar = atof(leftVar.c_str());
-		}
-		if (!IsNumber(rightVar))
-		{
-			GetValueVariable(rightVar, valSecondVar);
-		}
-		else
-		{
-			valSecondVar = atof(rightVar.c_str());
-		}
-		return CalcValTwoVar(op, valFirstVar, valSecondVar);
-	}
-	double result = 0;
-	if (GetValueVariable(leftVar, result))
-	{
-		return result;
+		return atof(variable.c_str());
 	}
 	return NAN;
 }

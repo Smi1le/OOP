@@ -19,6 +19,17 @@ void CCalculatorHelper::SetCommand()
 	} while (CallCommand(command));
 }
 
+static bool IsNumber(string const &val)
+{
+	for (auto elem : val) {
+		if (!isdigit(elem) && elem != '.')
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
 bool CCalculatorHelper::CallCommand(string const & command)
 {
 	vector<string> instructions;
@@ -58,22 +69,9 @@ bool CCalculatorHelper::CallCommand(string const & command)
 				cout << "It is impossible to add a variable" << endl;
 			}
 		}
-		else if (instructions[0] == ASS_VALUES_TO_VAR)
+		else if (instructions[0] == ASSIGN_VALUES_TO_VAR)
 		{
-			if (m_calculator.IsNumber(instructions[3]))
-			{
-				if (!m_calculator.AssignValToVar(instructions[1], atof(instructions[3].c_str())))
-				{
-					cout << "It failed to pass the value of one variable to another" << endl;
-				}
-			}
-			else
-			{
-				if (!m_calculator.AssignValToVar(instructions[1], instructions[3]))
-				{
-					cout << "Failed to pass the value of the variable" << endl;
-				}
-			}
+			AssignValueToVariable(instructions);
 		}
 		else if (instructions[0] == ADD_FUNCTION)
 		{
@@ -91,6 +89,24 @@ bool CCalculatorHelper::CallCommand(string const & command)
 		}
 	}
 	return true;
+}
+
+void CCalculatorHelper::AssignValueToVariable(vector<string> const & instructions)
+{
+	if (IsNumber(instructions[3]))
+	{
+		if (!m_calculator.AssignValToVar(instructions[1], atof(instructions[3].c_str())))
+		{
+			cout << "It failed to pass the value of one variable to another" << endl;
+		}
+	}
+	else
+	{
+		if (!m_calculator.AssignValToVar(instructions[1], instructions[3]))
+		{
+			cout << "Failed to pass the value of the variable" << endl;
+		}
+	}
 }
 
 void CCalculatorHelper::Help()const
@@ -114,7 +130,7 @@ bool CCalculatorHelper::CorrectInput(Vector const &instructions) const
 	if (instructions.size() >= 1 && (instructions[0] == EXIT || instructions[0] == PRINT_FNS ||
 		instructions[0] == PRINT_VARS || instructions[0] == HELP ||
 		(instructions[0] == ADD_VAR && instructions.size() == 2) ||
-		(instructions[0] == ASS_VALUES_TO_VAR && (instructions.size() == 4)) ||
+		(instructions[0] == ASSIGN_VALUES_TO_VAR && (instructions.size() == 4)) ||
 		(instructions[0] == ADD_FUNCTION && (instructions.size() == 4 || (instructions.size() == 6 && IsOperation(instructions[4])))) ||
 		(instructions[0] == PRINT && instructions.size() == 2)))
 	{

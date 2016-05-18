@@ -13,5 +13,6 @@ public:
 	bool IsOperation(std::string const &op) const;
 	bool CallCommand(std::string const & inst);
 private:
+	void AssignValueToVariable(vector<string> const & instructions);
 	CCalculator m_calculator;
 };

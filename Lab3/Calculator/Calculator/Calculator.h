@@ -5,6 +5,7 @@
 #include "FunctionContext.h"
 #include "Config.h"
 #include <iostream>
+#include "View.h"
 
 typedef std::map<std::string, CFunction> dataFunctions;
 
@@ -22,12 +23,11 @@ public:
 	bool AssignValToVar(std::string const & var1, std::string const & var2);
 	bool AssignValToVar(std::string const & var1, double val);
 	double GetValue(std::string const &var);
-	bool IsNumber(std::string const &val) const;
-	double Calculate(std::string const &leftVar, std::string const &rightVar, TypeOperand const &op, bool twoOp) override;
+	double Calculate(std::string const &variable) override;
 	bool GetValueVariable(std::string const &var, double &number);
-	double CalcValTwoVar(TypeOperand operation, double firstVal, double secondVal) const;
-private:
 	
+private:
 	dataVariables m_variables;
 	dataFunctions m_functions;
+	CView m_view;
 };
