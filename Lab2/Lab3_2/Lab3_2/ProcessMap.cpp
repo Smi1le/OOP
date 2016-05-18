@@ -138,7 +138,6 @@ void WorkWithDictionary(std::string const &nameDictionary)
 {
 	Dictionary dictionary = ReadDictionaryWithFile(nameDictionary);
 	UserIntaraction(dictionary, nameDictionary);
-	//Output(dictionary);
 }
 
 void ProcessMap(std::string const &nameDictionary)
