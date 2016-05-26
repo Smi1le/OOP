@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_SUITE(MyStack)
 			BOOST_CHECK_NO_THROW(stack.Pop());
 			BOOST_CHECK(stack.Peek() == 5);
 			BOOST_CHECK_NO_THROW(stack.Pop());
-			BOOST_CHECK_THROW(stack.Peek(), std::out_of_range);
+			BOOST_CHECK_THROW(stack.Peek(), std::exception);
 		}
 
 		BOOST_AUTO_TEST_CASE(method_IsEmpty)
