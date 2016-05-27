@@ -1,20 +1,28 @@
 #pragma once
 #include <vector>
-template <typename T, typename Less>
+#include <iostream>
 
-bool FindMax(std::vector<T> const &arr, T &maxValue,
-	Less const &less = [&](T const &lhs, T const &rhs) {return lhs > rhs; })
+template <typename T>
+bool FindMax(std::vector<T> const &arr, T &maxValue)
+{
+	return FindMax(arr, maxValue, std::less<T>());
+}
+
+template <typename T, typename Less>
+bool FindMax(std::vector<T> const &arr, T &maxValue, Less const &less)
 {
 	if (arr.empty())
 	{
 		return false;
 	}
+	T value = arr.front();
 	for (auto const &element : arr)
 	{
-		if (less(element, maxValue))
+		if (less(value, element))
 		{
-			maxValue = element;
+			value = element;
 		}
 	}
+	maxValue = value;
 	return true;
 }
