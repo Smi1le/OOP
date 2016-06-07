@@ -8,13 +8,12 @@ using namespace std;
 
 int main()
 {
-	CMyStack<int> stack;
-	
-	std::cout << stack.Peek() << endl;
-	stack.Push(23);
-	std::cout << stack.Peek() << endl;
-	stack.Pop();
-	std::cout << stack.Peek() << endl;
+	CMyStack<string> stringStack;
+	stringStack.Push("Hello");
+	{
+		CMyStack<string> stringStack1;
+		stringStack1 = stringStack;
+	}
 	return 0;
 
 }

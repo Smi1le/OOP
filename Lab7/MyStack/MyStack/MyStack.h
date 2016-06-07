@@ -2,62 +2,76 @@
 #include <vector>
 #include <string>
 #include <iostream>
-#include <stack>
-
-static const int STACK_SIZE = 500;
 
 template <typename T>
+struct SElement
+{
+	T value;
+	SElement* Next;
+};
 
+
+template <typename T>
 class CMyStack
 {
 public:
 	CMyStack();
-	CMyStack(CMyStack const &rhs);
-	CMyStack(CMyStack && rhs);
+	CMyStack(CMyStack const &other);
+	CMyStack(CMyStack && other);
 	~CMyStack();
 	inline void Push(T const &value);
 	inline void Pop();
 	inline T Peek() const;
 	inline bool IsEmpty() const;
 	inline void Clear();
-	void const operator =(CMyStack const &rhs);
-	void const operator =(CMyStack && rhs);
+	inline size_t GetSize() const;
+	void const operator =(CMyStack const &other);
+	void const operator =(CMyStack && other);
 private:
-	T *m_pStack;
+	SElement<T> *m_head;
 	size_t m_size;
 };
 
 template <typename T>
 CMyStack<T>::CMyStack()
 	: m_size(0)
-	, m_pStack(new T[STACK_SIZE])
-{}
+	, m_head(nullptr)
+{
+}
 
 template <typename T>
-CMyStack<T>::CMyStack(CMyStack const &rhs)
-	: m_size(rhs.m_size)
-	, m_pStack(new T[STACK_SIZE])
-{}
-template <typename T>
-CMyStack<T>::CMyStack(CMyStack && rhs)
+CMyStack<T>::CMyStack(CMyStack const &other)
+	: m_size(0)
+	, m_head(nullptr)
 {
-	*this = std::move(rhs);
+	*this = other;
+}
+template <typename T>
+CMyStack<T>::CMyStack(CMyStack && other)
+	: m_size(0)
+	, m_head(nullptr)
+{
+	*this = std::move(other);
 }
 
 template <typename T>
 CMyStack<T>::~CMyStack()
 {
-	delete[]m_pStack;
+	Clear();
 }
 
 template <typename T>
 void CMyStack<T>::Push(T const &value)
 {
-	if (m_size >= STACK_SIZE - 1)
+	SElement<T> *temp = nullptr;
+	if ((temp = new SElement<T>()) == NULL)
 	{
-		throw std::exception("You can not add, stack overflow.");
+		throw std::exception("it's impossible to allocate memory for the stack.");
 	}
-	m_pStack[m_size++] = value;
+	temp->value = value;
+	temp->Next = m_head;
+	m_head = temp;
+	++m_size;
 }
 
 template <typename T>
@@ -67,6 +81,9 @@ void CMyStack<T>::Pop()
 	{
 		throw std::exception("stack is empty.");
 	}
+	auto temp = m_head->Next;
+	delete m_head;
+	m_head = temp;
 	--m_size;
 }
 
@@ -77,50 +94,63 @@ T CMyStack<T>::Peek() const
 	{
 		throw std::exception("stack is empty.");
 	}
-	return m_pStack[m_size - 1];
+	return m_head->value;
 }
 
 template <typename T>
 bool CMyStack<T>::IsEmpty() const
 {
-	return m_size == 0 ? true : false;
+	return m_size == 0;
 }
 
 template <typename T>
 void CMyStack<T>::Clear()
 {
+	while (m_head != nullptr)
+	{
+		Pop();
+	}
 	m_size = 0;
 }
 
 template <typename T>
-void const CMyStack<T>::operator=(CMyStack const &rhs)
+void const CMyStack<T>::operator=(CMyStack const &other)
 {
-	if (m_pStack != rhs.m_pStack)
+	if (m_head != other.m_head)
 	{
-		delete[]m_pStack;
-		m_size = rhs.m_size;
-		if (!(m_pStack = new T[STACK_SIZE]))
+		Clear();
+		auto temp = other.m_head;
+		CMyStack<T> bufStack;
+		for (size_t i = 0; i != other.m_size; ++i)
 		{
-			throw std::exception("it is impossible to allocate memory for the stack.");
+			bufStack.Push(temp->value);
+			auto pointer = temp->Next;
+			temp = pointer;
 		}
-		memcpy(m_pStack, rhs.m_pStack, m_size);
+		auto pointer = bufStack.m_head;
+		for (size_t i = 0; i != other.m_size; ++i)
+		{
+			Push(pointer->value);
+			auto ptr = pointer->Next;
+			pointer = ptr;
+		}
+	}
+
+}
+
+template <typename T>
+void const CMyStack<T>::operator=(CMyStack && other)
+{
+	if (m_head != other.m_head)
+	{
+		Clear();
+		*this = other;
+		other.Clear();
 	}
 }
 
 template <typename T>
-void const CMyStack<T>::operator=(CMyStack && rhs)
+size_t CMyStack<T>::GetSize() const
 {
-	if (m_pStack != rhs.m_pStack)
-	{
-		std::swap(m_pStack, rhs.m_pStack);
-		m_size = rhs.m_size;
-		delete[]rhs.m_pStack;
-		if (!(rhs.m_pStack = new T[STACK_SIZE]))
-		{
-			throw std::exception("it is impossible to allocate memory for the stack.");
-		}
-		rhs.m_size = 0;
-	}
+	return m_size;
 }
-
-
