@@ -6,12 +6,14 @@
 
 int main()
 {
-	CHttpUrl url("frp://vk.com/android.html");
-	std::cout << url.ToStringProtocol() << std::endl;
-	std::cout << url.GetDomain() << std::endl;
-	std::cout << url.ToStringPort() << std::endl;
-	std::cout << url.GetDocument() << std::endl;
-	std::cout << url.GetURL() << std::endl;
+	try
+	{
+		CHttpUrl url("frp://vk.com/android.html");
+	}
+	catch (std::invalid_argument const &e)
+	{
+		std::cout << "Error -" << e.what() << std::endl;
+	}
     return 0;
 }
 

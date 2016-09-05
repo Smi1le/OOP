@@ -80,7 +80,7 @@ CMyString const CMyString::SubString(size_t start, size_t length) const
 }
 
 void CMyString::Clear()
-{
+{	
 	delete[]m_chars;
 	m_chars = new char[1]; // can throw std::bad_alloc
 	m_chars[0] = '\0';

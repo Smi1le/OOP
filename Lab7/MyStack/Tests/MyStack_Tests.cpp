@@ -3,7 +3,7 @@
 
 BOOST_AUTO_TEST_SUITE(MyStack) 
 
-	BOOST_AUTO_TEST_CASE(initialize_the_stack_with_no_parameters)
+	BOOST_AUTO_TEST_CASE(initialize_the_stack_without_parameters)
 	{
 		CMyStack<std::string> stringStack;
 		BOOST_CHECK(stringStack.GetSize() == 0);
@@ -57,7 +57,7 @@ BOOST_AUTO_TEST_SUITE(MyStack)
 		CMyStack<int> stack;
 	};
 
-	BOOST_FIXTURE_TEST_SUITE(stack_push_method, that_works_correctly_stack_all_methods)
+	BOOST_FIXTURE_TEST_SUITE(stack_methods, that_works_correctly_stack_all_methods)
 
 		BOOST_AUTO_TEST_CASE(method_push_and_check_top_stack)
 		{

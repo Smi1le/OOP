@@ -10,12 +10,12 @@ BOOST_AUTO_TEST_SUITE(Tests_for_parse_url)
 			BOOST_REQUIRE_THROW(CHttpUrl url("ftp://vk.com/animate.html"), CUrlParsingError);
 		}
 		
-		BOOST_AUTO_TEST_CASE(can_not_initialize_if_the_url_after_the_port_is_not_worth_the_correct_delimiter)
+		BOOST_AUTO_TEST_CASE(url_can_not_initialize_if_after_the_port_wrong_delimiter)
 		{
 			BOOST_REQUIRE_THROW(CHttpUrl url("http:vk.com/animate.html"), CUrlParsingError);
 		}
 
-		BOOST_AUTO_TEST_CASE(if_the_correct_protocol_written_properly)
+		BOOST_AUTO_TEST_CASE(if_the_protocol_in_the_url_is_invalid)
 		{
 			BOOST_REQUIRE_THROW(CHttpUrl url("htt p://vk.com/animate.html"), CUrlParsingError);
 			BOOST_REQUIRE_THROW(CHttpUrl url("htt.p://vk.com/animate.html"), CUrlParsingError);
@@ -37,7 +37,6 @@ BOOST_AUTO_TEST_SUITE(Tests_for_parse_url)
 			
 			BOOST_AUTO_TEST_CASE(if_in_domain_name_is_not)
 			{
-
 				BOOST_REQUIRE_THROW(CHttpUrl url("https:///animate.html"), CUrlParsingError);
 			}
 
@@ -79,14 +78,16 @@ BOOST_AUTO_TEST_SUITE(Tests_for_parse_url)
 
 		BOOST_AUTO_TEST_CASE(port_may_be_final_element)
 		{
-			CHttpUrl url("http://vk.com:14");
-			BOOST_CHECK_EQUAL(url.GetPort(), 14u);
+			CHttpUrl url("https://vk.com:80");
+			BOOST_CHECK_EQUAL(url.GetPort(), 80u);
 		}
 
-		BOOST_AUTO_TEST_CASE(if_there_is_a_colon_and_no_port_class_throw_excpt)
+		BOOST_AUTO_TEST_CASE(if_there_is_a_colon_and_port_invalid_throws_CUrlParsingError)
 		{
 			BOOST_REQUIRE_THROW(CHttpUrl url("http://vk.com:"), CUrlParsingError);
 			BOOST_REQUIRE_THROW(CHttpUrl url("http://vk.com:/animate.html"), CUrlParsingError);
+			BOOST_REQUIRE_THROW(CHttpUrl url("http://vk.com:mm"), CUrlParsingError);
+			BOOST_REQUIRE_THROW(CHttpUrl url("http://vk.com:999999999999999999999"), CUrlParsingError);//TODO: границы диапазона
 		}
 
 	BOOST_AUTO_TEST_SUITE_END()
@@ -177,6 +178,18 @@ BOOST_AUTO_TEST_SUITE(Tests_for_parse_url)
 
 		BOOST_AUTO_TEST_CASE(can_get_the_url)
 		{
+			CHttpUrl url1("http://vk.com:8080/index.php");
+			CHttpUrl url2("http://vk.com:80/index.php");
+			CHttpUrl url3("http://vk.com:443/index.php");
+			CHttpUrl url4("https://vk.com:8080/index.php");
+			CHttpUrl url5("https://vk.com:80/index.php");
+			CHttpUrl url6("https://vk.com:443/index.php");
+			BOOST_CHECK_EQUAL(url1.GetURL(), "http://vk.com:8080/index.php");
+			BOOST_CHECK_EQUAL(url2.GetURL(), "http://vk.com/index.php");
+			BOOST_CHECK_EQUAL(url3.GetURL(), "http://vk.com:443/index.php");
+			BOOST_CHECK_EQUAL(url4.GetURL(), "https://vk.com:8080/index.php");
+			BOOST_CHECK_EQUAL(url5.GetURL(), "https://vk.com:80/index.php");
+			BOOST_CHECK_EQUAL(url6.GetURL(), "https://vk.com/index.php");
 			BOOST_CHECK_EQUAL(url.GetURL(), urlStr);
 		}
 

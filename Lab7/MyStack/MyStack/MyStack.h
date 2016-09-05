@@ -7,7 +7,7 @@ template <typename T>
 struct SElement
 {
 	T value;
-	SElement* Next;
+	SElement* next;
 };
 
 
@@ -19,12 +19,12 @@ public:
 	CMyStack(CMyStack const &other);
 	CMyStack(CMyStack && other);
 	~CMyStack();
-	inline void Push(T const &value);
-	inline void Pop();
-	inline T Peek() const;
-	inline bool IsEmpty() const;
-	inline void Clear();
-	inline size_t GetSize() const;
+	void Push(T const &value);
+	void Pop();
+	T Peek() const;
+	bool IsEmpty() const;
+	void Clear();
+	size_t GetSize() const;
 	void const operator =(CMyStack const &other);
 	void const operator =(CMyStack && other);
 private:
@@ -64,12 +64,14 @@ template <typename T>
 void CMyStack<T>::Push(T const &value)
 {
 	SElement<T> *temp = nullptr;
-	if ((temp = new SElement<T>()) == NULL)
+	// TODO: useless condition and if-body
+	if ((temp = new SElement<T>()) == nullptr)
 	{
 		throw std::exception("it's impossible to allocate memory for the stack.");
 	}
+	// TODO: fix memory leak when value copy ctor throws exception.
 	temp->value = value;
-	temp->Next = m_head;
+	temp->next = m_head;
 	m_head = temp;
 	++m_size;
 }
@@ -79,9 +81,10 @@ void CMyStack<T>::Pop()
 {
 	if (m_size == 0)
 	{
+		// TODO: use `runtime_error`,`invalid_argument`, `logic_error`, `out_of_range` or something else
 		throw std::exception("stack is empty.");
 	}
-	auto temp = m_head->Next;
+	auto temp = m_head->next;
 	delete m_head;
 	m_head = temp;
 	--m_size;
@@ -90,6 +93,7 @@ void CMyStack<T>::Pop()
 template <typename T>
 T CMyStack<T>::Peek() const
 {
+	// TODO: use `runtime_error`,`invalid_argument`, `logic_error`, `out_of_range` or something else
 	if (m_size == 0)
 	{
 		throw std::exception("stack is empty.");
@@ -120,6 +124,7 @@ void const CMyStack<T>::operator=(CMyStack const &other)
 	{
 		Clear();
 		auto temp = other.m_head;
+		// TODO:don't allocate memory twice
 		CMyStack<T> bufStack;
 		for (size_t i = 0; i != other.m_size; ++i)
 		{
@@ -143,6 +148,7 @@ void const CMyStack<T>::operator=(CMyStack && other)
 {
 	if (m_head != other.m_head)
 	{
+		// TODO: move ctor should only move data without new allocations
 		Clear();
 		*this = other;
 		other.Clear();
